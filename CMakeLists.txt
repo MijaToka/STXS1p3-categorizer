@@ -12,6 +12,7 @@ install(TARGETS ${PROJECT_NAME}
 add_library(Scripts
   src/STXS_script.cpp
   src/STXS_Filter.cpp
+  src/Preprocess.cpp
 )
 
 add_library(Analysis
