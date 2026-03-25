@@ -1,6 +1,12 @@
+#ifndef STXS_COMMON_H
+#define STXS_COMMON_H
+
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <ROOT/RDF/RInterface.hxx>
+#include <TMath.h>
+#include <compare>
 #include <map>
+#include <set>
 
 enum class STXS0 {
   VBF_2jet,
@@ -20,20 +26,51 @@ static const STXS0 STXS0_categories[] = {
 enum Category { Pt, Mjj, Hjj_pt, Hj_H_pt, deltaPhi_jj, nJets };
 
 struct Range {
-  std::vector<std::string> columns;
-  float lower;
-  float upper;
+  std::vector<std::string> columns = {};
+  float lower = -999.f;
+  float upper = -999.f;
+
+  bool operator<(const Range &other) const { return lower < other.lower; };
+  bool operator==(const Range &other) const {
+    return (columns == other.columns) && (lower == other.lower) &&
+           (upper == other.upper);
+  };
+  bool operator!=(const Range &other) const { return !(*this == other); };
 };
 
 struct numberJets {
-  int nJet;
-  bool above;
+  int nJet = -1;
+  bool above = false;
 };
 
 struct STXS1 {
   STXS0 Category;
   std::optional<Range> Pt, Mjj, Hjj_pt, Hj_H_pt, deltaPhi_jj;
   std::optional<numberJets> nJets;
+
+  bool operator<(const STXS1 &other) const {
+    if (Category != other.Category)
+      return Category < other.Category;
+    if (nJets->nJet != other.nJets->nJet)
+      return nJets->nJet < other.nJets->nJet;
+    if (Pt != other.Pt)
+      return Pt < other.Pt;
+    if (Mjj != other.Mjj)
+      return Mjj < other.Mjj;
+    if (Hjj_pt != other.Hjj_pt)
+      return Hjj_pt < other.Hjj_pt;
+    if (Hj_H_pt != other.Hj_H_pt)
+      return Hj_H_pt < other.Hj_H_pt;
+    if (deltaPhi_jj != other.deltaPhi_jj)
+      return deltaPhi_jj < other.deltaPhi_jj;
+    return false;
+  };
+  bool operator==(const STXS1 &other) const {
+    return (Category == other.Category) && (Pt == other.Pt) &&
+           (Mjj == other.Mjj) && (Hjj_pt == other.Hjj_pt) &&
+           (Hj_H_pt == other.Hj_H_pt) && (deltaPhi_jj == other.deltaPhi_jj);
+  };
+  bool operator!=(const STXS1 &other) const { return !(*this == other); };
 };
 
 void snapshot(ROOT::RDF::RNode df, std::string output_dir,
@@ -42,3 +79,5 @@ void snapshot(ROOT::RDF::RNode df, std::string output_dir,
 void snapshot(ROOT::RDF::RNode df, std::string output_dir);
 
 void snapshot(std::map<STXS0, ROOT::RDF::RNode> df_map, std::string output_dir);
+
+#endif
