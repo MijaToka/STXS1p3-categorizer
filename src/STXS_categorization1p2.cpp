@@ -4,6 +4,8 @@
 #include <set>
 #include <vector>
 
+namespace Version1_2 {
+
 std::set<STXS1> define_untagged_subcategories() {
   std::set<STXS1> untagged_categories;
 
@@ -132,3 +134,5 @@ second_categorization(std::map<STXS0, ROOT::RDF::RNode> arr) {
 
   return output;
 }
+
+} // namespace Version1_2
