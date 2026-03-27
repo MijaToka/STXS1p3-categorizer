@@ -17,22 +17,30 @@
 
 std::string help_message() {
   std::stringstream ss;
-  ss << "Usage:\n\tSTXS13-plots -f ROOT_FILE [-f ROOT_FILE]... -v VERSION"
+  ss << "Usage:\n\tSTXS13-plots -f ROOT_FILE [-f ROOT_FILE]... -v VERSION -m "
+        "MODE"
      << std::endl
-     << std::endl;
-  ss << "Options:" << std::endl;
-  ss << "\t-f FILE\tintput file; may be given multiple times" << std::endl;
-  ss << "\t-v VERSION\t version number: 2 or 3" << std::endl;
-  ss << "\t-h, --help\t Show this text.";
+     << std::endl
+     << "Options:" << std::endl
+     << "\t-f FILE\t\tintput file; may be given multiple times" << std::endl
+     << "\t-v VERSION\tversion number: 2 or 3" << std::endl
+     << "\t-m,--mode MODE\tproduction mode (ggH, qqH, ttH, VH) determines\n"
+        "\t\t\tthe output directory"
+     << std::endl
+     << "\t-h, --help\tShow this text.";
 
   return ss.str();
 };
 
 void parseArguments(
-    int argc, char *argv[], std::vector<std::string> &files,
+    int argc, char *argv[], std::vector<std::string> &files, int &version,
+    std::string &mode,
     std::function<std::map<STXS1, ROOT::RDF::RNode>(
         std::map<STXS0, ROOT::RDF::RNode>)> &second_categorization) {
-  if (argc < 3) {
+
+  bool hasFiles(false), hasVersion(false), hasMode(false);
+
+  if (argc < 2) {
     std::cerr << help_message();
     exit(EXIT_FAILURE);
   }
@@ -43,27 +51,57 @@ void parseArguments(
       exit(EXIT_SUCCESS);
     }
 
-    if (std::string(argv[i]) == "-f")
+    if (std::string(argv[i]) == "-f") {
+      std::cout << "Adding file: " << argv[i + 1] << std::endl;
       files.push_back(argv[++i]);
+      hasFiles = true;
+    }
 
     else if (std::string(argv[i]) == "-v")
+
       try {
-        int version = std::stoi(argv[++i]);
+
+        version = std::stoi(argv[++i]);
         if (!(version == 2 || version == 3))
           throw std::invalid_argument("must be 2 or 3");
         else if (version == 2)
           second_categorization = Version1_2::second_categorization;
         else if (version == 3)
           second_categorization = Version1_3::second_categorization;
+
         std::cout << "Running version: " << version << std::endl;
+        hasVersion = true;
+
       } catch (const std::exception &e) {
+
         std::cerr << "Invalid -v value: " << e.what() << std::endl;
         exit(EXIT_FAILURE);
       }
-    else {
-      std::cerr << "Error parsing arguments" << std::endl;
+    else if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "--mode") {
+
+      mode = argv[++i];
+      std::cout << "Running production mode " << mode << std::endl;
+      hasMode = true;
+
+    } else {
+      std::cerr << "Error parsing arguments: Unknown flag " << argv[i]
+                << std::endl;
       exit(EXIT_FAILURE);
     }
+  }
+
+  // Check the obligatory variables are set
+  if (!hasFiles) {
+    std::cerr << "Must pass in a file." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (!hasMode) {
+    std::cerr << "Must pass in a mode." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (!hasVersion) {
+    std::cerr << "Must pass in a version." << std::endl;
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -73,20 +111,26 @@ int main(int argc, char *argv[]) {
       std::map<STXS0, ROOT::RDF::RNode>)>
       second_categorization;
   std::vector<std::string> files;
+  int version;
+  std::string mode;
 
-  parseArguments(argc, argv, files, second_categorization);
+  std::stringstream output_dir;
 
-  auto df = setup(files);
+  parseArguments(argc, argv, files, version, mode, second_categorization);
 
-  snapshot(df, "output");
+  output_dir << "output/" << mode;
+
+  auto df = setup(files[0], mode); // TO DO: add multi file support
+
+  snapshot(df, output_dir.str());
 
   auto step0 = first_categorization(df);
 
-  snapshot(step0, "output");
+  snapshot(step0, output_dir.str());
 
   auto step1 = second_categorization(step0);
 
-  snapshot(step1, "output");
+  snapshot(step1, output_dir.str(), version);
 
   exit(EXIT_SUCCESS);
 }

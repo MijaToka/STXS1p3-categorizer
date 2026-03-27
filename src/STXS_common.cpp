@@ -59,7 +59,7 @@ std::string parseRange(const Range &r) {
   return ss.str();
 };
 
-std::string generate_STXS1_categoty_name(const STXS1 &s) {
+std::string generate_STXS1_category_name(const STXS1 &s) {
 
   std::stringstream ss;
   ss << categoryNames.at(s.Category);
@@ -81,7 +81,7 @@ std::string generate_STXS1_categoty_name(const STXS1 &s) {
 
 void printCategory(STXS1 &s) {
   std::cout << "STXS1 {" << std::endl;
-  std::cout << "\t" << generate_STXS1_categoty_name(s) << std::endl;
+  std::cout << "\t" << generate_STXS1_category_name(s) << std::endl;
   std::cout << "\tCategory:\t" << categoryNames.at(s.Category) << std::endl;
 
   if (s.nJets)
@@ -105,83 +105,45 @@ void printCategory(STXS1 &s) {
   std::cout << "}" << std::endl;
 };
 
-void snapshot(ROOT::RDF::RNode df, std::string output_dir,
-              std::string file_name) {
+void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
+              const std::string &file_name) {
   std::vector<std::string> column_to_save = {
       // ZZ candidate features
-      "ZZCand_pt",
-      "ZZCand_eta",
-      "ZZCand_phi",
-      "ZZCand_mass",
-      "ZZCand_costheta1",
-      "ZZCand_costheta2",
-      "ZZCand_costhetastar",
-      "ZZCand_Phi1",
-      "ZZCand_nExtraLep",
-      "ZZjj_pt",
+      "ZZCand_pt", "ZZCand_eta", "ZZCand_phi", "ZZCand_mass",
+      "ZZCand_costheta1", "ZZCand_costheta2", "ZZCand_costhetastar",
+      "ZZCand_Phi1", "ZZCand_nExtraLep", "ZZjj_pt",
+
       // MET
       "PFMET_pt",
+
       // Jet features
-      "JetLeading_pt",
-      "JetLeading_eta",
-      "JetLeading_mass",
-      "JetLeading_phi",
-      "JetSubleading_pt",
-      "JetSubleading_eta",
-      "JetSubleading_mass",
-      "JetSubleading_phi",
-      "nCleanedJetsPt30",
-      "nBtagged_filtered",
-      "JetLeading_btag",
-      "JetSubleading_btag",
+      "JetLeading_pt", "JetLeading_eta", "JetLeading_mass", "JetLeading_phi",
+      "JetSubleading_pt", "JetSubleading_eta", "JetSubleading_mass",
+      "JetSubleading_phi", "nCleanedJetsPt30", "nBtagged_filtered",
+      "JetLeading_btag", "JetSubleading_btag",
+
       // Dijet features
-      "deltaEta_jj",
-      "deltaPhi_jj",
-      "m_jj",
+      "deltaEta_jj", "deltaPhi_jj", "m_jj",
+
       // Lepton features (primary 4 leptons)
-      "LepPt_0",
-      "LepPt_1",
-      "LepPt_2",
-      "LepPt_3",
-      "LepEta_0",
-      "LepEta_1",
-      "LepEta_2",
-      "LepEta_3",
-      "LepPhi_0",
-      "LepPhi_1",
-      "LepPhi_2",
-      "LepPhi_3",
-      "LepPdgId_0",
-      "LepPdgId_1",
-      "LepPdgId_2",
-      "LepPdgId_3",
+      "LepPt_0", "LepPt_1", "LepPt_2", "LepPt_3", "LepEta_0", "LepEta_1",
+      "LepEta_2", "LepEta_3", "LepPhi_0", "LepPhi_1", "LepPhi_2", "LepPhi_3",
+      "LepPdgId_0", "LepPdgId_1", "LepPdgId_2", "LepPdgId_3",
+
       // Extra lepton features
-      "LepPt_4",
-      "LepPt_5",
-      "LepEta_4",
-      "LepEta_5",
-      "LepPhi_4",
-      "LepPhi_5",
-      "LepPdgId_4",
-      "LepPdgId_5",
+      "LepPt_4", "LepPt_5", "LepEta_4", "LepEta_5", "LepPhi_4", "LepPhi_5",
+      "LepPdgId_4", "LepPdgId_5",
+
       // Discriminants
-      "DVBF2j_ME",
-      "DVBF1j_ME",
-      "DWHh_ME",
-      "DZHh_ME",
-      "DVBF2j_ME_noC",
-      "DVBF1j_ME_noC",
-      "DWHh_ME_noC",
-      "DZHh_ME_noC",
-      "ZZCand_KD",
+      "DVBF2j_ME", "DVBF1j_ME", "DWHh_ME", "DZHh_ME", "DVBF2j_ME_noC",
+      "DVBF1j_ME_noC", "DWHh_ME_noC", "DZHh_ME_noC", "ZZCand_KD",
+
       // Event weights and label
-      /*
-        "EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
-        "production_mode", "HTXS_stage_0", "overallEventWeight", "genWeight",
-        "puWeight", "trainWeight", "HTXS_stage1_2_cat_pTjet30GeV",
-        "HTXS_stage1_2_cat_pTjet30GeV_label", "genEventSumw"
-      */
-  };
+      "EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
+      "production_mode", "HTXS_stage_0", "overallEventWeight",
+      "HTXS_stage1_2_cat_pTjet30GeV", "genWeight", "puWeight", "trainWeight",
+      //"HTXS_stage1_2_cat_pTjet30GeV_label",
+      "genEventSumw"};
 
   std::filesystem::create_directories(output_dir);
   std::stringstream ss;
@@ -189,12 +151,12 @@ void snapshot(ROOT::RDF::RNode df, std::string output_dir,
   df.Snapshot("Events", ss.str(), column_to_save);
 }
 
-void snapshot(ROOT::RDF::RNode df, std::string output_dir) {
+void snapshot(ROOT::RDF::RNode df, const std::string &output_dir) {
   snapshot(df, output_dir, "snapshot.root");
 };
 
-void snapshot(std::map<STXS0, ROOT::RDF::RNode> df_map,
-              std::string output_dir) {
+void snapshot(const std::map<STXS0, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir) {
   std::map<STXS0, std::string> STXS0_names = {
       {STXS0::VBF_2jet, "VBF_2jet.root"},
       {STXS0::VH_hadronic, "VH_hadronic.root"},
@@ -211,13 +173,15 @@ void snapshot(std::map<STXS0, ROOT::RDF::RNode> df_map,
   }
 };
 
-void snapshot(std::map<STXS1, ROOT::RDF::RNode> df_map,
-              std::string output_dir) {
+void snapshot(const std::map<STXS1, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir, std::optional<int> version) {
   std::stringstream ss;
   ss << output_dir << "/second_categorization";
+  if (version)
+    ss << "_version" << version.value();
   for (auto const &[category, df] : df_map) {
     std::stringstream name_ss;
-    name_ss << generate_STXS1_categoty_name(category) << ".root";
+    name_ss << generate_STXS1_category_name(category) << ".root";
     snapshot(df, ss.str(), name_ss.str());
   }
 };

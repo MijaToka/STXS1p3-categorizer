@@ -8,7 +8,9 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <optional>
 #include <set>
+#include <string>
 
 constexpr float infty = std::numeric_limits<float>::infinity();
 
@@ -92,18 +94,21 @@ STXS1 create_range(STXS1 prevSTXS1, const Category column, Float_t lower,
 std::set<STXS1> cut_ranges(STXS1 prevSTXS1, const Category column,
                            std::vector<Float_t> ranges);
 
-void snapshot(ROOT::RDF::RNode df, std::string output_dir,
-              std::string file_name);
+void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
+              const std::string &file_name);
 
-void snapshot(ROOT::RDF::RNode df, std::string output_dir);
+void snapshot(ROOT::RDF::RNode df, const std::string &output_dir);
 
-void snapshot(std::map<STXS0, ROOT::RDF::RNode> df_map, std::string output_dir);
+void snapshot(const std::map<STXS0, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir);
 
-void snapshot(std::map<STXS1, ROOT::RDF::RNode> df_map, std::string output_dir);
+void snapshot(const std::map<STXS1, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir,
+              std::optional<int> version = std::nullopt);
 
 void printCategory(STXS1 &s);
 
-std::string generate_STXS1_categoty_name(const STXS1 &s);
+std::string generate_STXS1_category_name(const STXS1 &s);
 
 ROOT::RDF::RNode applySTXS1(ROOT::RDF::RNode df, const STXS1 &category);
 

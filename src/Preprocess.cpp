@@ -3,15 +3,38 @@
 #include <Math/Vector4Dfwd.h>
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <ROOT/RDF/RInterfaceBase.hxx>
+#include <ROOT/RDFHelpers.hxx>
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RVec.hxx>
 #include <RtypesCore.h>
+#include <TFile.h>
+#include <TTree.h>
 #include <cstdlib>
 #include <string>
-#include <vector>
 
-ROOT::RDF::RNode setup(std::vector<std::string> files) {
-  ROOT::RDF::RNode df = ROOT::RDataFrame("Events", files);
+Double_t get_genEventSumw(const std::string &file_path) {
+  TFile *file = TFile::Open(file_path.c_str(), "READ");
+
+  TTree *runs = (TTree *)file->Get("Runs");
+  TTree *events = (TTree *)file->Get("Events");
+
+  Double_t genEventSumw(0), eventSumw;
+  Long64_t genEventCount(0), eventCount;
+
+  runs->SetBranchAddress("genEventSumw", &eventSumw);
+  runs->SetBranchAddress("genEventCount", &eventCount);
+
+  for (int iRun = 0; iRun < runs->GetEntries(); iRun++) {
+    runs->GetEntry(iRun);
+    genEventSumw += eventSumw;
+    genEventCount += eventCount;
+  }
+  return genEventSumw;
+};
+
+ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
+
+  ROOT::RDF::RNode df = ROOT::RDataFrame("Events", file);
 
   // Define kinematical variables
   df =
@@ -466,5 +489,28 @@ ROOT::RDF::RNode setup(std::vector<std::string> files) {
                                                     : -999;
                   },
                   {"Lepton_pdgId", "ZZCand_extraLep2Idx", "bestCandIdx"});
+
+  // Event weights and production mode
+  Double_t genEventSumw = get_genEventSumw(file);
+  df = df.Define("genEventSumw", [genEventSumw]() { return genEventSumw; }, {})
+           .Define("EventWeight_lumi18",
+                   [genEventSumw](Float_t overalW) {
+                     return 18.063 * overalW * 1000 / genEventSumw;
+                   },
+                   {"overallEventWeight"})
+           .Define("EventWeight_lumi138",
+                   [genEventSumw](Float_t overalW) {
+                     return 138. * overalW * 1000 / genEventSumw;
+                   },
+                   {"overallEventWeight"})
+           .Define("EventWeight_lumi9",
+                   [genEventSumw](Float_t overalW) {
+                     return 9.693 * overalW * 1000 / genEventSumw;
+                   },
+                   {"overallEventWeight"})
+           .Define("production_mode", [mode]() { return mode; }, {})
+           .Define("trainWeight",
+                   [](Float_t genW, Float_t puW) { return genW * puW; },
+                   {"genWeight", "puWeight"});
   return df;
 }
