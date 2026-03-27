@@ -107,6 +107,8 @@ void parseArguments(
 
 int main(int argc, char *argv[]) {
 
+  ROOT::EnableImplicitMT();
+
   std::function<std::map<STXS1, ROOT::RDF::RNode>(
       std::map<STXS0, ROOT::RDF::RNode>)>
       second_categorization;
