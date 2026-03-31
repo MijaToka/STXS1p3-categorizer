@@ -37,6 +37,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
   ROOT::RDF::RNode df = ROOT::RDataFrame("Events", file);
 
   // Define kinematical variables
+  // TODO: Hj_H_pt
   df =
       df.Filter([](Short_t id) { return id > -1; }, {"bestCandIdx"})
           .Filter(
@@ -163,6 +164,12 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                   },
                   {"ZZVector", "LeadingVector", "SubLeadingVector",
                    "JetLeadingIdx", "JetSubleadingIdx"})
+          .Define("ZZj_pt",
+                  [](ROOT::Math::PtEtaPhiMVector ZZ,
+                     ROOT::Math::PtEtaPhiMVector lead, Short_t leadIdx) {
+                    return (leadIdx != -1) ? (ZZ + lead).Pt() : -999.f;
+                  },
+                  {"ZZVector", "LeadingVector", "JetLeadingIdx"})
           .Define("Jet_btagPNetB_filtered",
                   [](ROOT::RVec<Float_t> pt, ROOT::RVec<Bool_t> ZZMask,
                      ROOT::RVec<Float_t> btagPNetB) {

@@ -49,9 +49,12 @@ std::set<STXS1> define_untagged_subcategories() {
   }
 
   // ggHhighPt
-  std::set<STXS1> ggHhighPt = cut_ranges(STXS1{.Category = STXS0::Untagged}, Pt,
-                                         {200, 300, 450, 650, 1000, infty});
-  untagged_categories.insert(ggHhighPt.begin(), ggHhighPt.end());
+  for (STXS1 pt_cut : cut_ranges(STXS1{.Category = STXS0::Untagged}, Pt,
+                                 {200, 300, 450, 650, 1000, infty})) {
+    for (STXS1 Hj_H_pt_cut : cut_ranges(pt_cut, Hj_H_pt, {0, 0.15, infty})) {
+      untagged_categories.insert(Hj_H_pt_cut);
+    }
+  }
 
   return untagged_categories;
 }
