@@ -100,8 +100,8 @@ void parseArguments(
     exit(EXIT_FAILURE);
   }
   if (!hasVersion) {
-    std::cerr << "Must pass in a version." << std::endl;
-    exit(EXIT_FAILURE);
+    std::cout << "Running only the preprocess and STXS0" << std::endl;
+    version = -1;
   }
 }
 
@@ -126,11 +126,13 @@ int main(int argc, char *argv[]) {
 
   auto step0 = first_categorization(df);
 
-  auto step1 = second_categorization(step0);
+  if (version != -1) {
+    auto step1 = second_categorization(step0);
+    snapshot(step1, output_dir.str(), version);
+  }
 
   snapshot(df, output_dir.str());
   snapshot(step0, output_dir.str());
-  snapshot(step1, output_dir.str(), version);
 
   exit(EXIT_SUCCESS);
 }
