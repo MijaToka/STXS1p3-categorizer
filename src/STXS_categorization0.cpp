@@ -4,7 +4,9 @@
 #include <ROOT/RDF/RVariationsDescription.hxx>
 #include <ROOT/RVec.hxx>
 #include <RtypesCore.h>
+#include <iostream>
 #include <map>
+#include <sstream>
 
 std::map<STXS0, ROOT::RDF::RNode> first_categorization(ROOT::RDF::RNode df) {
 
@@ -70,24 +72,29 @@ std::map<STXS0, ROOT::RDF::RNode> first_categorization(ROOT::RDF::RNode df) {
 
   std::map<STXS0, ROOT::RDF::RNode> arr;
 
-  arr.emplace(STXS0::VBF_2jet, df.Filter("VBF2j_mask"));
-  arr.emplace(STXS0::VH_hadronic, df.Filter("!VBF2j_mask && VH_had_mask"));
-  arr.emplace(STXS0::VH_leptonic,
-              df.Filter("!VBF2j_mask && !VH_had_mask && VH_lep_mask"));
-  arr.emplace(
-      STXS0::ttH_hadronic,
-      df.Filter("!VBF2j_mask && !VH_had_mask && !VH_lep_mask && ttH_had_mask"));
-  arr.emplace(
-      STXS0::ttH_leptonic,
-      df.Filter("!VBF2j_mask && !VH_had_mask && !VH_lep_mask && !ttH_had_mask "
-                "&& ttH_lep_mask"));
-  arr.emplace(
-      STXS0::VBF_1jet,
-      df.Filter("!VBF2j_mask && !VH_had_mask && !VH_lep_mask && !ttH_had_mask "
-                "&& !ttH_lep_mask && VBF1j_mask"));
-  arr.emplace(
-      STXS0::Untagged,
-      df.Filter("!VBF2j_mask && !VH_had_mask && !VH_lep_mask && !ttH_had_mask "
-                "&& !ttH_lep_mask && !VBF1j_mask"));
+  STXS0 filterOrder[] = {STXS0::VBF_2jet,     STXS0::VH_hadronic,
+                         STXS0::VH_leptonic,  STXS0::ttH_hadronic,
+                         STXS0::ttH_leptonic, STXS0::VBF_1jet,
+                         STXS0 ::Untagged};
+
+  std::map<STXS0, std::string> maskName = {
+      {STXS0::VBF_2jet, "VBF2j_mask"},
+      {STXS0::VH_hadronic, "VH_had_mask"},
+      {STXS0::VH_leptonic, "VH_lep_mask"},
+      {STXS0::ttH_hadronic, "ttH_had_mask"},
+      {STXS0::ttH_leptonic, "ttH_lep_mask"},
+      {STXS0::VBF_1jet, "VBF1j_mask"},
+      {STXS0::Untagged, "true"}};
+
+  std::stringstream exclusionMask;
+  for (STXS0 category : filterOrder) {
+    std::stringstream currMask;
+    currMask << exclusionMask.str() << maskName.at(category);
+
+    arr.emplace(category, df.Filter(currMask.str()));
+
+    exclusionMask << "!" << maskName.at(category) << " & ";
+  }
+
   return arr;
 }
