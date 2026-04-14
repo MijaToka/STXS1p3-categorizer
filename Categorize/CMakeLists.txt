@@ -12,13 +12,12 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 add_library(Scripts
-  plugins/STXS_script.cpp
-  plugins/Preprocess.cpp
-  plugins/STXS_common.cpp
-  plugins/STXS_categorization0.cpp
-  plugins/STXS_categorization1p2.cpp
-  plugins/STXS_categorization1p3.cpp
-  plugins/parseArgs.cpp
+  src/Preprocess.cpp
+  src/STXS_common.cpp
+  src/STXS_categorization0.cpp
+  src/STXS_categorization1p2.cpp
+  src/STXS_categorization1p3.cpp
+  src/parseArgs.cpp
 )
 
 add_library(Analysis
