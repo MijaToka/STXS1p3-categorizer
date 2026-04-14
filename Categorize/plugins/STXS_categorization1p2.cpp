@@ -1,4 +1,4 @@
-#include "STXS_common.h"
+#include "STXS/Categorize/interface/STXS_common.h"
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <map>
 #include <set>

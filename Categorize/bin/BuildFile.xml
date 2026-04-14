@@ -1,0 +1,8 @@
+<use name="STXS/Categorization"/>
+<use name="root"/>
+<use name="rootcore"/>
+
+<bin name="STXS-Categorization" file="main.cpp">
+  <use name="STXS/Categorization"/>
+  <use name="STXSScripts"/>
+</bin>

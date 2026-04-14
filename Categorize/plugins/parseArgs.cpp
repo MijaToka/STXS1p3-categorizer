@@ -1,6 +1,6 @@
-#include "STXS_categorization1p2.cpp"
-#include "STXS_categorization1p3.cpp"
-#include "STXS_common.h"
+#include "STXS/Categorize/interface/STXS_common.h"
+#include "STXS/Categorize/plugins/STXS_categorization1p2.cpp"
+#include "STXS/Categorize/plugins/STXS_categorization1p3.cpp"
 #include <algorithm>
 #include <exception>
 #include <iostream>

@@ -1,0 +1,11 @@
+<use name="ZZAnalysis/AnalysisStep"/>
+<use name="root"/>
+<use name="rootcore"/>
+
+<Flags SKIP_FILES="cCconstants.cc Discriminants.cc"/>
+
+<export>
+  <use name="root"/>
+  <use name="ZZAnalysis/AnalysisStep"/>
+  <lib name="1"/>
+</export>

@@ -1,5 +1,5 @@
-#include "Discriminants.h"
-#include "cConstants.h"
+#include "STXS/Categorize/interface/Discriminants.h"
+#include "STXS/Categorize/interface/cConstants.h"
 
 #include <cmath>
 
