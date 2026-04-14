@@ -1,7 +1,8 @@
-#include "STXS/Categorize/interface/STXS_common.h"
+#include "STXSCategorizer/Categorize/interface/STXS_common.h"
 #include <Math/Math.h>
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <ROOT/RDF/RInterface.hxx>
+#include <ROOT/RDataFrame.hxx>
 #include <ROOT/RVec.hxx>
 #include <RtypesCore.h>
 #include <cstdlib>
@@ -42,7 +43,7 @@ STXS1 create_range(STXS1 prevSTXS1, const Category column, Float_t lower,
 std::set<STXS1> cut_ranges(STXS1 prevSTXS1, const Category column,
                            std::vector<Float_t> ranges) {
   std::set<STXS1> output;
-  for (int i = 1; i < ranges.size(); i++) {
+  for (size_t i = 1; i < ranges.size(); i++) {
     auto newCategory =
         create_range(prevSTXS1, column, ranges[i - 1], ranges[i]);
     output.insert(newCategory);
@@ -123,7 +124,7 @@ void printCategory(STXS1 &s) {
 
 void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
               const std::string &file_name) {
-  std::vector<std::string> column_to_save = {
+  std::vector<std::string> columns_to_save = {
       // ZZ candidate features
       "ZZCand_pt", "ZZCand_eta", "ZZCand_phi", "ZZCand_mass",
       "ZZCand_costheta1", "ZZCand_costheta2", "ZZCand_costhetastar",
@@ -164,7 +165,7 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
   std::filesystem::create_directories(output_dir);
   std::stringstream ss;
   ss << output_dir << "/" << file_name;
-  df.Snapshot("Events", ss.str(), column_to_save);
+  df.Snapshot("Events", ss.str(), columns_to_save);
 }
 
 void snapshot(ROOT::RDF::RNode df, const std::string &output_dir) {

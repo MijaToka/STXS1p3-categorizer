@@ -1,4 +1,4 @@
-#include "STXS/Categorize/interface/Discriminants.h"
+#include "STXSCategorizer/Categorize/interface/Discriminants.h"
 #include <Math/Vector4D.h>
 #include <Math/Vector4Dfwd.h>
 #include <ROOT/RDF/InterfaceUtils.hxx>
@@ -16,7 +16,7 @@ Double_t get_genEventSumw(const std::string &file_path) {
   TFile *file = TFile::Open(file_path.c_str(), "READ");
 
   TTree *runs = (TTree *)file->Get("Runs");
-  TTree *events = (TTree *)file->Get("Events");
+  // TTree *events = (TTree *)file->Get("Events");
 
   Double_t genEventSumw(0), eventSumw;
   Long64_t genEventCount(0), eventCount;
@@ -315,7 +315,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                   [](ROOT::RVec<Float_t> pt, ROOT::RVec<Bool_t> ZZMask,
                      ROOT::RVec<Float_t> btagPNetB) {
                     ROOT::VecOps::RVec<Float_t> filtered;
-                    for (int i = 0; i < pt.size(); i++) {
+                    for (size_t i = 0; i < pt.size(); i++) {
                       if (pt[i] > 30 && !ZZMask[i]) {
                         filtered.push_back(btagPNetB[i]);
                       }

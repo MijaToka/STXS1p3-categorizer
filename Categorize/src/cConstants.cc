@@ -1,4 +1,4 @@
-#include "STXS/Categorize/interface/cConstants.h"
+#include "STXSCategorizer/Categorize/interface/cConstants.h"
 #include <TFile.h>
 
 #include <cassert>

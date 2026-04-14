@@ -1,8 +1,7 @@
-<use name="STXS/Categorize"/>
+<use name="STXSCategorizer/Categorize"/>
 <use name="root"/>
 <use name="rootcore"/>
+<use name="rootvecops"/>
 
 <bin name="STXS-Categorization" file="main.cpp">
-  <use name="STXS/Categorization"/>
-  <use name="STXSScripts"/>
 </bin>

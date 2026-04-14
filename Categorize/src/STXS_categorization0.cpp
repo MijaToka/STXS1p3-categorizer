@@ -1,4 +1,4 @@
-#include "STXS/Categorize/interface/STXS_common.h"
+#include "STXSCategorizer/Categorize/interface/STXS_common.h"
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <ROOT/RDF/RInterface.hxx>
 #include <ROOT/RDF/RVariationsDescription.hxx>

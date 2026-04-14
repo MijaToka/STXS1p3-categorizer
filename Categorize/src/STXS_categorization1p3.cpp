@@ -1,4 +1,5 @@
-#include "STXS/Categorize/interface/STXS_common.h"
+#include "STXSCategorizer/Categorize/interface/STXS_categorization1p3.h"
+#include "STXSCategorizer/Categorize/interface/STXS_common.h"
 #include <Math/Math.h>
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <map>
