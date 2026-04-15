@@ -1,5 +1,5 @@
-#include "STXSCategorizer/Categorize/interface/Discriminants.h"
-#include "STXSCategorizer/Categorize/interface/cConstants.h"
+#include "ZZAnalysis/AnalysisStep/interface/Discriminants.h"
+#include "ZZAnalysis/AnalysisStep/interface/cConstants.h"
 
 #include <cmath>
 

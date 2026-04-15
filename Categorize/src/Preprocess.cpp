@@ -1,4 +1,4 @@
-#include "STXSCategorizer/Categorize/interface/Discriminants.h"
+#include "ZZAnalysis/AnalysisStep/interface/Discriminants.h"
 #include <Math/Vector4D.h>
 #include <Math/Vector4Dfwd.h>
 #include <ROOT/RDF/InterfaceUtils.hxx>
