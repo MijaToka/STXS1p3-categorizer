@@ -4,7 +4,7 @@
 <use name="rootvecops"/>
 <use name="rootdataframe"/>
 
-<flags SKIP_FILES="cCconstants.cc Discriminants.cc"/>
+<flags SKIP_FILES="cConstants.cc Discriminants.cc"/>
 
 <export>
   <use name="root"/>
