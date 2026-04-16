@@ -13,3 +13,4 @@ filter_dataframe.py
 run_all.sh
 compile_commands.json
 .cache/clangd/index
+pyrightconfig.json
