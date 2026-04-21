@@ -10,3 +10,14 @@ add_library(Analysis
 target_include_directories(Analysis
   PUBLIC ${ZZANALYSIS_INCLUDE_DIR}
 )
+
+target_include_directories(STXS_CommonUtils
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../..
+)
+
+target_link_libraries(STXS_CommonUtils
+  PUBLIC
+    ${ROOT_LIBRARIES}
+  PRIVATE
+    Analysis
+)

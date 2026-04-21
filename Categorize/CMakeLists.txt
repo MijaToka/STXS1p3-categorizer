@@ -19,7 +19,6 @@ target_link_libraries(${PROJECT_NAME}
     ${ROOT_LIBRARIES}
   PRIVATE
     Scripts
-    Analysis
     STXS_CommonUtils
 )
 

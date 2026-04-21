@@ -9,31 +9,33 @@
 
 std::map<STXS0, ROOT::RDF::RNode> first_categorization(ROOT::RDF::RNode df) {
 
+  const Float_t DVBF2j_Cut(0.7), DVBF1j_Cut(0.5), DVH_Cut(0.95);
   df =
       df.Define(
             "VBF2j_mask",
-            [](ROOT::VecOps::RVec<Int_t> nExtraLep, Float_t DVBF2j,
-               Char_t nJets, Int_t nBtag, Short_t idx) {
+            [DVBF2j_Cut](ROOT::VecOps::RVec<Int_t> nExtraLep, Float_t DVBF2j,
+                         Char_t nJets, Int_t nBtag, Short_t idx) {
               return (idx != -1)
-                         ? (nExtraLep[idx] == 0) && (DVBF2j > 0.5) &&
+                         ? (nExtraLep[idx] == 0) && (DVBF2j > DVBF2j_Cut) &&
                                (((nJets == 2 || nJets == 3) && (nBtag <= 1)) ||
                                 (nJets == 4 && nBtag == 0))
                          : false;
             },
             {"ZZCand_nExtraLep", "DVBF2j_ME", "nCleanedJetsPt30",
              "nBtagged_filtered", "bestCandIdx"})
-          .Define("VH_had_mask",
-                  [](ROOT::VecOps::RVec<Int_t> nExtraLep, Float_t DWHh,
-                     Float_t DZHh, Char_t nJets, Int_t nBtag, Short_t idx) {
-                    return (idx != -1) ? (nExtraLep[idx] == 0) &&
-                                             (DWHh > 0.5 || DZHh > 0.5) &&
-                                             (((nJets == 2 || nJets == 3) &&
-                                               nBtag <= 1) ||
-                                              (nJets == 4 && nBtag == 0))
-                                       : false;
-                  },
-                  {"ZZCand_nExtraLep", "DWHh_ME", "DZHh_ME", "nCleanedJetsPt30",
-                   "nBtagged_filtered", "bestCandIdx"})
+          .Define(
+              "VH_had_mask",
+              [DVH_Cut](ROOT::VecOps::RVec<Int_t> nExtraLep, Float_t DWHh,
+                        Float_t DZHh, Char_t nJets, Int_t nBtag, Short_t idx) {
+                return (idx != -1)
+                           ? (nExtraLep[idx] == 0) &&
+                                 (DWHh > DVH_Cut || DZHh > DVH_Cut) &&
+                                 (((nJets == 2 || nJets == 3) && nBtag <= 1) ||
+                                  (nJets == 4 && nBtag == 0))
+                           : false;
+              },
+              {"ZZCand_nExtraLep", "DWHh_ME", "DZHh_ME", "nCleanedJetsPt30",
+               "nBtagged_filtered", "bestCandIdx"})
           .Define("is_OSSF_pair",
                   [](Int_t id4, Int_t id5) {
                     return (id4 != 0) && (id4 + id5 == 0);
@@ -69,10 +71,10 @@ std::map<STXS0, ROOT::RDF::RNode> first_categorization(ROOT::RDF::RNode df) {
                   {"ZZCand_nExtraLep", "nCleanedJetsPt30", "nBtagged_filtered",
                    "bestCandIdx"})
           .Define("VBF1j_mask",
-                  [](ROOT::VecOps::RVec<Int_t> nExtraLep, Float_t DVBF1j,
-                     Char_t nJets, Short_t idx) {
+                  [DVBF1j_Cut](ROOT::VecOps::RVec<Int_t> nExtraLep,
+                               Float_t DVBF1j, Char_t nJets, Short_t idx) {
                     return (idx != -1) ? nJets == 1 && nExtraLep[idx] == 0 &&
-                                             DVBF1j > 0.7
+                                             DVBF1j > DVBF1j_Cut
                                        : false;
                   },
                   {"ZZCand_nExtraLep", "DVBF1j_ME", "nCleanedJetsPt30",
