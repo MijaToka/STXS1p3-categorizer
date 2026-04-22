@@ -5,13 +5,14 @@ from argparse import ArgumentParser, Namespace
 def parseArgs():
     parser = ArgumentParser(
         prog="run_counting",
-        description="This program counts the number of weighted events in the output files computed from STXSCategorizerr, produces a summary plot, and generates data cards from the",
+        description="This program counts the number of weighted events in the output files computed from STXSCategorizer, produces a summary plot, and generates data cards from the",
     )
     parser.add_argument("--background", action="store_true")
     parser.add_argument("--directory", "-d")
     parser.add_argument("--output_dir", "-o")
-    parser.add_argument("--version", "-v")
+    parser.add_argument("--version", "-v",type=int)
     parser.add_argument("--plot", action="store_true")
+    parser.add_argument("--lumi","-l",default=138,type=int)
 
     return parser.parse_args()
 
@@ -21,6 +22,7 @@ def main(args: Namespace) -> None:
         "step": int(args.version),
         "irrBkg": args.background,
         "dir": args.directory,
+        "lumi": args.lumi,
     }
 
     from STXSCategorizer.Analyze.SetupPlots import setupPlot
@@ -36,7 +38,7 @@ def main(args: Namespace) -> None:
     
     from STXSCategorizer.Analyze.DataCards import data_cards_from_summaryPlot
     
-    data_cards_from_summaryPlot(kwarg_summaryPlots, canvas, args.output_dir)
+    data_cards_from_summaryPlot(kwarg_summaryPlots, canvas, args.output_dir, args.version)
 
     return
 

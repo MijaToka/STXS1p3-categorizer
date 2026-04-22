@@ -168,7 +168,7 @@ def write_data_card(
     return
 
 
-def data_cards_from_summaryPlot(config: PlotsKwarg, canvas: TCanvas, dir: str):
+def data_cards_from_summaryPlot(config: PlotsKwarg, canvas: TCanvas, dir: str, version:int):
     for catIdx, category in enumerate(config.get("categories", [])):
         processList = []
         totalExpected = 0
@@ -185,7 +185,7 @@ def data_cards_from_summaryPlot(config: PlotsKwarg, canvas: TCanvas, dir: str):
             processList.append(currProcess)
 
         write_data_card(
-            file_path=f"{dir}/data-cards/{category}.txt",
+            file_path=f"{dir}/data-cards/STXS{version if version == 0 else f'1p{version}'}_{category}.txt",
             processes=processList,
             observedDict={category: round(totalExpected, 3)},
         )

@@ -46,11 +46,11 @@ def setupModes(config: PlotsKwarg, step: int) -> PlotsKwarg:
 
     if step == 0:
         targetsStage0 = {
+            "ggH125": ROOT.kAzure + 1,
+            "VBFH125": ROOT.kOrange + 7,
             "WplusH125": ROOT.kGreen + 1,
             "WminusH125": ROOT.kGreen + 2,
             "ZH125": ROOT.kGreen,
-            "ggH125": ROOT.kAzure + 1,
-            "VBFH125": ROOT.kOrange + 7,
             "ttH125": ROOT.kViolet,
         }
         for mode in bkgProductionModes:
