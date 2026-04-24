@@ -1,5 +1,6 @@
 add_library(STXS_CommonUtils
   src/Preprocess.cpp
+  src/STXS_common.cpp
 )
 
 add_library(Analysis

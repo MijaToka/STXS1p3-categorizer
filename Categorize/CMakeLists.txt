@@ -7,7 +7,6 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 add_library(Scripts
-  src/STXS_common.cpp
   src/STXS_categorization0.cpp
   src/STXS_categorization1p2.cpp
   src/STXS_categorization1p3.cpp
