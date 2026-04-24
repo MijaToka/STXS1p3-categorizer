@@ -4,7 +4,7 @@ project(STXS-Categorize VERSION 1.0.0)
 option(BUILD_CATEGORIZE "Build Categorize SubModule" OFF)
 option(BUILD_CATEGORIZEBDT "Build CategorizeBDT SubModule" OFF)
 
-find_package(ROOT 6.36 CONFIG REQUIRED)
+find_package(ROOT 6.36 CONFIG REQUIRED COMPONENTS TMVA)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

@@ -10,11 +10,11 @@ install(TARGETS ${PROJECT_NAME}-train ${PROJECT_NAME}-bdt
   RUNTIME DESTINATION bin
 )
 
-#[[
 add_library(STXS_BDT_Train 
-  
+  src/Train2jHadParams.cpp 
 )
 
+#[[
 add_library(STXS_BDT_Application
 
 )
@@ -29,7 +29,7 @@ target_link_libraries(${PROJECT_NAME}-train
   PRIVATE
     STXS_CommonUtils
     # STXS_BDT_Common
-    # STXS_BDT_Train
+    STXS_BDT_Train
 )
 
 #[[
