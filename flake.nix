@@ -18,6 +18,7 @@
         imports = [
           ./Categorize/package.nix
           ./CategorizeBDT/package.nix
+          ./package.nix
           ./shell.nix
         ];
         systems = [ "x86_64-linux" ];
