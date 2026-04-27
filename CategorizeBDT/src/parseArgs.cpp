@@ -88,7 +88,7 @@ void parseArguments(int argc, char *argv[], std::string &directory,
 
     case Flag::PATH: {
       std::filesystem::path path(argv[++i]);
-      std::string pathStr(std::filesystem::absolute(path).string());
+      output = std::filesystem::absolute(path).string();
       break;
     }
 

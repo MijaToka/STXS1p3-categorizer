@@ -472,7 +472,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
             [](ROOT::VecOps::RVec<Float_t> LepPt,
                ROOT::VecOps::RVec<Short_t> l1, ROOT::VecOps::RVec<Short_t> l2,
                Short_t idx) {
-              return (LepPt[l1[idx]] >= LepPt[l1[idx]]) ? l1[idx] : l2[idx];
+              return (LepPt[l1[idx]] >= LepPt[l2[idx]]) ? l1[idx] : l2[idx];
             },
             {"Lepton_pt", "ZZCand_Z1l1Idx", "ZZCand_Z1l2Idx", "bestCandIdx"})
           .Define(
@@ -480,7 +480,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
               [](ROOT::VecOps::RVec<Float_t> LepPt,
                  ROOT::VecOps::RVec<Short_t> l1, ROOT::VecOps::RVec<Short_t> l2,
                  Short_t idx) {
-                return (LepPt[l1[idx]] >= LepPt[l1[idx]]) ? l2[idx] : l1[idx];
+                return (LepPt[l1[idx]] >= LepPt[l2[idx]]) ? l2[idx] : l1[idx];
               },
               {"Lepton_pt", "ZZCand_Z1l1Idx", "ZZCand_Z1l2Idx", "bestCandIdx"})
           .Define(
@@ -488,7 +488,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
               [](ROOT::VecOps::RVec<Float_t> LepPt,
                  ROOT::VecOps::RVec<Short_t> l1, ROOT::VecOps::RVec<Short_t> l2,
                  Short_t idx) {
-                return (LepPt[l1[idx]] >= LepPt[l1[idx]]) ? l1[idx] : l2[idx];
+                return (LepPt[l1[idx]] >= LepPt[l2[idx]]) ? l1[idx] : l2[idx];
               },
               {"Lepton_pt", "ZZCand_Z2l1Idx", "ZZCand_Z2l2Idx", "bestCandIdx"})
           .Define(
@@ -496,7 +496,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
               [](ROOT::VecOps::RVec<Float_t> LepPt,
                  ROOT::VecOps::RVec<Short_t> l1, ROOT::VecOps::RVec<Short_t> l2,
                  Short_t idx) {
-                return (LepPt[l1[idx]] >= LepPt[l1[idx]]) ? l2[idx] : l1[idx];
+                return (LepPt[l1[idx]] >= LepPt[l2[idx]]) ? l2[idx] : l1[idx];
               },
               {"Lepton_pt", "ZZCand_Z2l1Idx", "ZZCand_Z2l2Idx", "bestCandIdx"})
           .Define("LepPt",
