@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.26.5)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(STXS-Categorize VERSION 1.0.0)
 
 option(BUILD_CATEGORIZE "Build Categorize SubModule" OFF)
