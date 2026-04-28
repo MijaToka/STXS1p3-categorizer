@@ -4,8 +4,6 @@
 #include <ROOT/RDF/InterfaceUtils.hxx>
 #include <ROOT/RDF/RInterface.hxx>
 #include <TMath.h>
-#include <compare>
-#include <iostream>
 #include <limits>
 #include <map>
 #include <optional>

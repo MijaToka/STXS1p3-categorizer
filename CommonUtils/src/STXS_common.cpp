@@ -126,10 +126,12 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
               const std::string &file_name) {
   std::vector<std::string> columns_to_save = {
       // ZZ candidate features
-      "ZZCand_pt", "ZZCand_eta", "ZZCand_phi", "ZZCand_mass",
-      "ZZCand_costheta1", "ZZCand_costheta2", "ZZCand_costhetastar",
-      "ZZCand_Phi1", "ZZCand_nExtraLep", "ZZCand_nExtraLep_best", "ZZjj_pt",
-      "bestCandIdx",
+      "ZZCand_pt", "ZZCand_pt_bestCand", "ZZCand_eta", "ZZCand_eta_bestCand",
+      "ZZCand_phi", "ZZCand_phi_bestCand", "ZZCand_mass",
+      "ZZCand_mass_bestCand", "ZZCand_costheta1", "ZZCand_costheta1_bestCand",
+      "ZZCand_costheta2", "ZZCand_costheta2_bestCand", "ZZCand_costhetastar",
+      "ZZCand_costhetastar_bestCand", "ZZCand_Phi1", "ZZCand_Phi1_bestCand",
+      "ZZCand_nExtraLep", "ZZCand_nExtraLep_bestCand", "ZZjj_pt", "bestCandIdx",
 
       // MET
       "PFMET_pt",
@@ -155,6 +157,7 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
       // Discriminants
       "DVBF2j_ME", "DVBF1j_ME", "DWHh_ME", "DZHh_ME", "DVBF2j_ME_noC",
       "DVBF1j_ME_noC", "DWHh_ME_noC", "DZHh_ME_noC", "ZZCand_KD",
+      "ZZCand_KD_bestCand",
 
       // Event weights and label
       "EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
@@ -167,8 +170,13 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
   std::stringstream ss;
   ss << output_dir << "/" << file_name;
   df.Snapshot("Events", ss.str(), columns_to_save);
-}
 
+  // Force load the RDF to avoid lazyloading issues
+  int n_events = df.Count().GetValue();
+
+  std::cout << "Saved " << n_events << " events to file " << ss.str()
+            << std::endl;
+}
 void snapshot(ROOT::RDF::RNode df, const std::string &output_dir) {
   snapshot(df, output_dir, "snapshot.root");
 };

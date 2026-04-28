@@ -328,12 +328,58 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                   [](ROOT::VecOps::RVec<Float_t> bTag) {
                     return ROOT::VecOps::Sum(bTag > 0.2421);
                   },
-                  {"Jet_btagPNetB_filtered"})
-          .Define("ZZCand_nExtraLep_best",
-                  [](ROOT::VecOps::RVec<Int_t> nExtraLep, Short_t idx) {
-                    return nExtraLep[idx];
-                  },
-                  {"ZZCand_nExtraLep", "bestCandIdx"});
+                  {"Jet_btagPNetB_filtered"});
+
+  // Flatten values
+  df = df.Define(
+             "ZZCand_pt_bestCand",
+             [](ROOT::VecOps::RVec<Int_t> pt, Short_t idx) { return pt[idx]; },
+             {"ZZCand_pt", "bestCandIdx"})
+           .Define("ZZCand_eta_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> eta, Short_t idx) {
+                     return eta[idx];
+                   },
+                   {"ZZCand_eta", "bestCandIdx"})
+           .Define("ZZCand_phi_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> phi, Short_t idx) {
+                     return phi[idx];
+                   },
+                   {"ZZCand_phi", "bestCandIdx"})
+           .Define("ZZCand_mass_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> mass, Short_t idx) {
+                     return mass[idx];
+                   },
+                   {"ZZCand_mass", "bestCandIdx"})
+           .Define("ZZCand_costheta1_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> costheta1, Short_t idx) {
+                     return costheta1[idx];
+                   },
+                   {"ZZCand_costheta1", "bestCandIdx"})
+           .Define("ZZCand_costheta2_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> costheta2, Short_t idx) {
+                     return costheta2[idx];
+                   },
+                   {"ZZCand_costheta2", "bestCandIdx"})
+           .Define("ZZCand_costhetastart_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> costhetastart, Short_t idx) {
+                     return costhetastart[idx];
+                   },
+                   {"ZZCand_costhetastart", "bestCandIdx"})
+           .Define("ZZCand_Phi1_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> Phi1, Short_t idx) {
+                     return Phi1[idx];
+                   },
+                   {"ZZCand_Phi1", "bestCandIdx"})
+           .Define("ZZCand_KD_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> KD, Short_t idx) {
+                     return KD[idx];
+                   },
+                   {"ZZCand_KD", "bestCandIdx"})
+           .Define("ZZCand_nExtraLep_bestCand",
+                   [](ROOT::VecOps::RVec<Int_t> nExtraLep, Short_t idx) {
+                     return nExtraLep[idx];
+                   },
+                   {"ZZCand_nExtraLep", "bestCandIdx"});
 
   // Define MET alias for cosnsistency
   df = df.Define("PFMET_pt", "MET_pt");
