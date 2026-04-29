@@ -331,47 +331,48 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                   {"Jet_btagPNetB_filtered"});
 
   // Flatten values
-  df = df.Define(
-             "ZZCand_pt_bestCand",
-             [](ROOT::VecOps::RVec<Int_t> pt, Short_t idx) { return pt[idx]; },
-             {"ZZCand_pt", "bestCandIdx"})
+  df = df.Define("ZZCand_pt_bestCand",
+                 [](ROOT::VecOps::RVec<Float_t> pt, Short_t idx) {
+                   return pt[idx];
+                 },
+                 {"ZZCand_pt", "bestCandIdx"})
            .Define("ZZCand_eta_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> eta, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> eta, Short_t idx) {
                      return eta[idx];
                    },
                    {"ZZCand_eta", "bestCandIdx"})
            .Define("ZZCand_phi_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> phi, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> phi, Short_t idx) {
                      return phi[idx];
                    },
                    {"ZZCand_phi", "bestCandIdx"})
            .Define("ZZCand_mass_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> mass, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> mass, Short_t idx) {
                      return mass[idx];
                    },
                    {"ZZCand_mass", "bestCandIdx"})
            .Define("ZZCand_costheta1_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> costheta1, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> costheta1, Short_t idx) {
                      return costheta1[idx];
                    },
                    {"ZZCand_costheta1", "bestCandIdx"})
            .Define("ZZCand_costheta2_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> costheta2, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> costheta2, Short_t idx) {
                      return costheta2[idx];
                    },
                    {"ZZCand_costheta2", "bestCandIdx"})
-           .Define("ZZCand_costhetastart_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> costhetastart, Short_t idx) {
-                     return costhetastart[idx];
+           .Define("ZZCand_costhetastar_bestCand",
+                   [](ROOT::VecOps::RVec<Float_t> costhetastar, Short_t idx) {
+                     return costhetastar[idx];
                    },
-                   {"ZZCand_costhetastart", "bestCandIdx"})
+                   {"ZZCand_costhetastar", "bestCandIdx"})
            .Define("ZZCand_Phi1_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> Phi1, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> Phi1, Short_t idx) {
                      return Phi1[idx];
                    },
                    {"ZZCand_Phi1", "bestCandIdx"})
            .Define("ZZCand_KD_bestCand",
-                   [](ROOT::VecOps::RVec<Int_t> KD, Short_t idx) {
+                   [](ROOT::VecOps::RVec<Float_t> KD, Short_t idx) {
                      return KD[idx];
                    },
                    {"ZZCand_KD", "bestCandIdx"})
@@ -727,6 +728,9 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
            .Define("trainWeight",
                    [](Float_t genW, Float_t puW) { return genW * puW; },
                    {"genWeight", "puWeight"})
+           .Define("HTXS_stage1_2_cat_pTjet30GeV_merged",
+                   [](int cat) { return STXSStage12MergedCat(cat); },
+                   {"HTXS_stage1_2_cat_pTjet30GeV"})
            .Define("HTXS_stage1_2_cat_pTjet30GeV_label",
                    [mode](int cat) { return STXSStage12Label(cat, mode); },
                    {"HTXS_stage1_2_cat_pTjet30GeV"});
