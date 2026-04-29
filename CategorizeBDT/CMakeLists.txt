@@ -12,6 +12,12 @@ install(TARGETS ${PROJECT_NAME}-train ${PROJECT_NAME}-bdt
 
 add_library(STXS_BDT_Train 
   src/Train2jHadParams.cpp 
+  src/TrainStep1p2.cpp
+)
+
+target_link_libraries(STXS_BDT_Train
+  PRIVATE 
+    STXS_CommonUtils
 )
 
 #[[

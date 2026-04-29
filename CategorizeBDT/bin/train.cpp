@@ -1,4 +1,4 @@
-#include "STXSCategorizer/CategorizeBDT/src/Train2jHadParams.cpp"
+#include "STXSCategorizer/CategorizeBDT/src/TrainStep1p2.cpp"
 #include "STXSCategorizer/CategorizeBDT/src/parseArgs.cpp"
 #include "STXSCategorizer/CommonUtils/interface/Preprocess.h"
 #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
       "TMVAMulticlassSTXS0", outfile,
       ":!V:!Silent:Color:DrawProgressBar:AnalysisType=Multiclass");
 
-  load2jData(factory, directory, dataSetName, verbose);
+  loadSTXS1p2Data(factory, directory, dataSetName, trainFiles, verbose);
 
   factory->TrainAllMethods();
   factory->TestAllMethods();
