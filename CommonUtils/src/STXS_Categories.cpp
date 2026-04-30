@@ -141,3 +141,35 @@ std::string STXSStage12Label(int cat, const std::string &mode) {
 
   return label;
 }
+
+STXS_STAGE_1_2_PARTIAL_MERGED STXSStage12PartialMergedCat(STXS_STAGE_1_2 cat) {
+  switch (cat) {
+  case STXS_STAGE_1_2::QQ2HQQ_0J:
+  case STXS_STAGE_1_2::QQ2HQQ_1J:
+  case STXS_STAGE_1_2::QQ2HQQ_GE2J_MJJ_0_60:
+  case STXS_STAGE_1_2::QQ2HQQ_GE2J_MJJ_120_350:
+    return STXS_STAGE_1_2_PARTIAL_MERGED::QQ2HQQ_rest;
+  case STXS_STAGE_1_2::QQ2HQQ_GE2J_MJJ_350_700_PTH_0_200_PTHJJ_GT25:
+  case STXS_STAGE_1_2::QQ2HQQ_GE2J_MJJ_GT700_PTH_0_200_PTHJJ_GT25:
+    return STXS_STAGE_1_2_PARTIAL_MERGED::
+        QQ2HQQ_GE2J_MJJ_GT350_PTH_0_200_PTHJJ_GT25;
+  default:
+    return static_cast<STXS_STAGE_1_2_PARTIAL_MERGED>(static_cast<int>(cat));
+  }
+}
+
+STXS_STAGE_1_2_MERGED STXSStage12MergedCat(STXS_STAGE_1_2_PARTIAL_MERGED cat) {
+  switch (cat) {
+  case STXS_STAGE_1_2_PARTIAL_MERGED::TTH_PTH_0_60:
+  case STXS_STAGE_1_2_PARTIAL_MERGED::TTH_PTH_120_200:
+  case STXS_STAGE_1_2_PARTIAL_MERGED::TTH_PTH_200_300:
+  case STXS_STAGE_1_2_PARTIAL_MERGED::TTH_PTH_GT300:
+    return STXS_STAGE_1_2_MERGED::TTH;
+  default:
+    return static_cast<STXS_STAGE_1_2_MERGED>(static_cast<int>(cat));
+  }
+}
+
+STXS_STAGE_1_2_MERGED STXSStage12MergedCat(STXS_STAGE_1_2 cat) {
+  return STXSStage12MergedCat(STXSStage12PartialMergedCat(cat));
+}
