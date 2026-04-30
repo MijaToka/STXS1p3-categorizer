@@ -13,6 +13,7 @@ install(TARGETS ${PROJECT_NAME}-train ${PROJECT_NAME}-bdt
 add_library(STXS_BDT_Train 
   src/Train2jHadParams.cpp 
   src/TrainStep1p2.cpp
+  src/parseArgsTrain.cpp
 )
 
 target_link_libraries(STXS_BDT_Train
@@ -20,11 +21,11 @@ target_link_libraries(STXS_BDT_Train
     STXS_CommonUtils
 )
 
-#[[
 add_library(STXS_BDT_Application
-
+  src/parseArgsApply.cpp
 )
 
+#[[
 add_library(STXS_BDT_Common
 
 )

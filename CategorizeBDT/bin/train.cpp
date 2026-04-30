@@ -1,5 +1,5 @@
 #include "STXSCategorizer/CategorizeBDT/src/TrainStep1p2.cpp"
-#include "STXSCategorizer/CategorizeBDT/src/parseArgs.cpp"
+#include "STXSCategorizer/CategorizeBDT/src/parseArgsTrain.cpp"
 #include "STXSCategorizer/CommonUtils/interface/Preprocess.h"
 #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
 #include <ROOT/RDF/InterfaceUtils.hxx>
