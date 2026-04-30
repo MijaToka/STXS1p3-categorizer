@@ -20,3 +20,4 @@ run_categorize.sh
 log-train.txt
 PROD_samplesNano_2022EE_MC_8d4c03f7/weights
 Analyze/python/.ipynb_checkpoints
+PROD_samplesNano_2022EE_MC_8d4c03f7_qq_rest_merged/weights
