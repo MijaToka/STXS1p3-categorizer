@@ -48,6 +48,42 @@ inline const std::map<STXS_STAGE_1_2_MERGED, std::string> CategoriesToTrain = {
     // ttH
     {STXS_STAGE_1_2_MERGED::TTH, "TTH"},
 };
+
+inline std::vector<std::string> TrainedCategoryNames = {
+    // "Unknown",
+
+    // Gluon fusion
+    "Untagged_Pt200above",
+
+    "Untagged_0jet_Pt0To10",
+    "Untagged_0jet_Pt10above",
+
+    "Untagged_1jet_Pt0To60",
+    "Untagged_1jet_Pt60To120",
+    "Untagged_1jet_Pt120To200",
+
+    "Untagged_2jet_Pt0To60_Mjj0To350",
+    "Untagged_2jet_Pt60To120_Mjj0To350",
+    "Untagged_2jet_Pt120To200_Mjj0To350",
+    "Untagged_2jet_Mjj350above",
+
+    // VBF
+    "qq2Hqq_rest",
+
+    "qq2Hqq_2jet_Mjj60To120",
+    "qq2Hqq_2jet_Pt200above_Mjj350above",
+    "qq2Hqq_2jet_Pt0To200_Mjj350To700_Hjj_pt0To25",
+    "qq2Hqq_2jet_Pt0To200_Mjj350above_Hjj_pt25above",
+
+    "qq2Hqq_2jet_MJJ700above_Pt0To200_Hjj_pt0To25",
+    // qq -> WH
+    "VH_lep_Pt0To150",
+
+    "VH_lep_Pt150above",
+
+    // ttH
+    "ttH",
+};
 } // namespace STXS1p2TrainConfig
 
 #endif

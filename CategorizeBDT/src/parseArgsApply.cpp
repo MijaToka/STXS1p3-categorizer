@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <map>
@@ -9,15 +10,17 @@
 
 std::string help_message() {
   std::stringstream ss;
-  ss << "Usage:\n\tSTXS-Categorization-train -d DIR [-o OUTPUT_PATH -p "
-        "--verbose]"
+  ss << "Usage:\n\tSTXS-Categorization-apply -f FILE [-f FILE -o OUTPUT_PATH "
+        "-w WEIGHTS --verbose]"
      << std::endl
      << std::endl
      << "Options:" << std::endl
-     << "\t-d DIR\t\tintput directory of the MC training data." << std::endl
-     << "\t-p, --preprocess\tdetermines if te data has to be preprocessed "
-        "\t\t\t(calculate discriminants and reduce to only the relevant "
-        "variables)"
+     << "\t-f, --file FILE\t\tintput file to be categorized (can be passed "
+        "multiple "
+        "times)."
+     << std::endl
+     << "\t-w, --weights WEIGHTS\tpath to the weight files produced by the "
+        "training."
      << std::endl
      << "\t-o, --output PATH\t\tdefines the output directory defaults to "
         "./output"
@@ -29,23 +32,25 @@ std::string help_message() {
   return ss.str();
 };
 
-enum class Flag { HELP, PREPROCESS, VERBOSE, DIRECTORY, PATH, UNKNOWN };
+enum class Flag { HELP, VERBOSE, FILE, OUTPUT, WEIGHTS, UNKNOWN };
 
 static const std::map<std::string, Flag> flagMap = {
     {"-h", Flag::HELP},           {"--help", Flag::HELP},
-    {"-p", Flag::PREPROCESS},     {"--preprocess", Flag::PREPROCESS},
-    {"--verbose", Flag::VERBOSE}, {"-d", Flag::DIRECTORY},
-    {"-o", Flag::PATH},           {"--output", Flag::PATH}};
+    {"-f", Flag::FILE},           {"--file", Flag::FILE},
+    {"--verbose", Flag::VERBOSE}, {"-w", Flag::WEIGHTS},
+    {"--weights", Flag::WEIGHTS}, {"-o", Flag::OUTPUT},
+    {"--output", Flag::OUTPUT}};
 
 Flag getFlag(const std::string &arg) {
   auto keyvalPair = flagMap.find(arg);
   return (keyvalPair != flagMap.end() ? keyvalPair->second : Flag::UNKNOWN);
 }
 
-void parseArguments(int argc, char *argv[], std::string &directory,
-                    std::string &output, bool &preprocess, bool &verbose) {
+void parseArguments(int argc, char *argv[], std::vector<std::string> &files,
+                    std::string &weightFile, std::string &output,
+                    bool &verbose) {
 
-  bool hasDir(false);
+  bool hasFiles(false), hasWeights(false);
 
   output = "./output";
 
@@ -63,30 +68,35 @@ void parseArguments(int argc, char *argv[], std::string &directory,
     case Flag::VERBOSE:
       break;
 
-    case Flag::PREPROCESS:
-      preprocess = true;
-      break;
-
     case Flag::HELP:
       std::cout << help_message();
       exit(EXIT_SUCCESS);
       break;
 
-    case Flag::DIRECTORY: {
-      if (!hasDir) {
-        std::filesystem::path path(argv[++i]);
-        std::string pathStr(std::filesystem::absolute(path).string());
+    case Flag::FILE: {
+      std::filesystem::path path(argv[++i]);
+      std::string pathStr(std::filesystem::absolute(path).string());
 
-        if (verbose)
-          std::cout << "Training on data under: " << pathStr << std::endl;
+      if (verbose)
+        std::cout << "Adding file: " << pathStr << std::endl;
 
-        directory = pathStr;
-        hasDir = true;
-      }
+      files.push_back(pathStr);
+      hasFiles = true;
       break;
     }
 
-    case Flag::PATH: {
+    case Flag::WEIGHTS: {
+      std::filesystem::path path(argv[++i]);
+      std::string pathStr(std::filesystem::absolute(path).string());
+
+      if (verbose)
+        std::cout << "Reading weight file: " << pathStr << std::endl;
+
+      weightFile = pathStr;
+      hasWeights = true;
+      break;
+    }
+    case Flag::OUTPUT: {
       std::filesystem::path path(argv[++i]);
       output = std::filesystem::absolute(path).string();
       break;
@@ -101,8 +111,12 @@ void parseArguments(int argc, char *argv[], std::string &directory,
   }
 
   // Check the obligatory variables are set
-  if (!hasDir) {
+  if (!hasFiles) {
     std::cerr << "Must pass in a file." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (!hasWeights) {
+    std::cerr << "Must pass in the weights file." << std::endl;
     exit(EXIT_FAILURE);
   }
   if (verbose) { // Output directory verbose message
