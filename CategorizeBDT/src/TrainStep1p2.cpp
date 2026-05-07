@@ -7,6 +7,7 @@
 #include <TMVA/DataLoader.h>
 #include <TMVA/Factory.h>
 #include <TString.h>
+#include <TSystem.h>
 #include <filesystem>
 #include <iostream>
 
@@ -24,6 +25,7 @@ void loadSTXS1p2Data(TMVA::Factory *factory, const std::string directory,
                         static_cast<int>(cat))));
   }
 
+  gSystem->ChangeDirectory(directory.c_str());
   TMVA::DataLoader *loader = new TMVA::DataLoader(datasetName);
 
   for (auto [varName, dtype] : variablesSTXS1p2 /* From config/Variables.h */) {

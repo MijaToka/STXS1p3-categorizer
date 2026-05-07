@@ -13,6 +13,7 @@
 #include <TMVA/Types.h>
 #include <TROOT.h>
 #include <TTree.h>
+#include <cstdlib>
 #include <filesystem>
 #include <sstream>
 #include <string>
@@ -88,14 +89,24 @@ int main(int argc, char *argv[]) {
 
   // Initialize the factory and data loader
   std::stringstream outfiless;
-  outfiless << output << "/" << dataSetName << "/train_BDT_results.root";
+  outfiless << output << "/" << dataSetName;
+
+  std::filesystem::create_directory(outfiless.str());
+
+  outfiless << "/train_BDT_results.root";
   TFile *outfile = TFile::Open(outfiless.str().c_str(), "RECREATE");
+
+  if (!outfile || outfile->IsZombie()) {
+    std::cerr << "Could not open the output file, path " << outfiless.str()
+              << " doesn't exist";
+    exit(EXIT_FAILURE);
+  }
 
   TMVA::Factory *factory = new TMVA::Factory(
       "TMVAMulticlassSTXS0", outfile,
       ":!V:!Silent:Color:DrawProgressBar:AnalysisType=Multiclass");
 
-  loadSTXS1p2Data(factory, directory, dataSetName, trainFiles, verbose);
+  loadSTXS1p2Data(factory, output, dataSetName, trainFiles, verbose);
 
   factory->TrainAllMethods();
   factory->TestAllMethods();
@@ -108,5 +119,5 @@ int main(int argc, char *argv[]) {
   }
 
   delete factory;
-  return 1;
+  return 0;
 }
