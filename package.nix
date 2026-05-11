@@ -44,7 +44,7 @@
             owner = "CJLST";
             repo = "ZZAnalysis";
             rev = "Run3";
-            hash = "sha256-7GYShs71BlhfqmeUOvwXWB0yJbM1UtySbG2i3fsclH4=";
+            hash = "sha256-Dg0axUjsDz+Qgf8hANjbDesmHurcl3bq1tcAsSNlYPc=";
           };
           dontBuild = true;
           installPhase = ''
