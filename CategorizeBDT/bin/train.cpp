@@ -119,5 +119,5 @@ int main(int argc, char *argv[]) {
   }
 
   delete factory;
-  return 0;
+  exit(EXIT_SUCCESS);
 }

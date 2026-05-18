@@ -3,6 +3,7 @@
 #include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
 #include <TCut.h>
 #include <map>
+#include <vector>
 
 namespace STXS1p2TrainConfig {
 inline const std::map<STXS_STAGE_1_2_MERGED, std::string> CategoriesToTrain = {
@@ -83,6 +84,43 @@ inline std::vector<std::string> TrainedCategoryNames = {
 
     // ttH
     "ttH",
+};
+
+inline std::vector<STXS_STAGE_1_2_MERGED> TrainedCategories = {
+
+    // STXS_STAGE_1_2_MERGED::UNKNOWN,
+
+    // Gluon fusion
+    STXS_STAGE_1_2_MERGED::GG2H_PTH_GT200,
+
+    STXS_STAGE_1_2_MERGED::GG2H_0J_PTH_0_10,
+    STXS_STAGE_1_2_MERGED::GG2H_0J_PTH_GT10,
+
+    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_0_60,
+    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_60_120,
+    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_120_200,
+
+    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_0_60,
+    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_60_120,
+    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_120_200,
+    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_GT350,
+
+    // VBF
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_rest,
+
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_60_120,
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT350_PTH_GT200,
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_350_700_PTH_0_200_PTHJJ_0_25,
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT350_PTH_0_200_PTHJJ_GT25,
+
+    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT700_PTH_0_200_PTHJJ_0_25,
+    // qq -> WH
+    STXS_STAGE_1_2_MERGED::VH_lep_PTV_0_150,
+
+    STXS_STAGE_1_2_MERGED::VH_lep_PTV_GT150,
+
+    // ttH
+    STXS_STAGE_1_2_MERGED::TTH,
 };
 } // namespace STXS1p2TrainConfig
 
