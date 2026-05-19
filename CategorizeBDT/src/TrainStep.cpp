@@ -1,6 +1,4 @@
-#include "STXSCategorizer/CategorizeBDT/src/config/Categories.h"
-#include "STXSCategorizer/CategorizeBDT/src/config/Parameters.h"
-#include "STXSCategorizer/CategorizeBDT/src/config/Variables.h"
+#include "STXSCategorizer/CategorizeBDT/src/config/TrainConfig.h"
 #include <TChain.h>
 #include <TCut.h>
 #include <TFile.h>
@@ -11,16 +9,17 @@
 #include <filesystem>
 #include <iostream>
 
-void loadSTXS1p2Data(TMVA::Factory *factory, const std::string directory,
-                     const std::string datasetName,
-                     const std::vector<std::string> trainFiles,
-                     const bool verbose) {
+template <typename STXS_STAGE>
+void loadSTXSData(TMVA::Factory *factory, const std::string directory,
+                  const std::string datasetName,
+                  const std::vector<std::string> trainFiles,
+                  const BDTConfig<STXS_STAGE> &TrainConfig,
+                  const bool verbose) {
 
-  std::vector<std::pair<std::string, TCut>> categories1p2;
+  std::vector<std::pair<std::string, TCut>> cutPerCategory;
 
-  for (auto [cat, name] :
-       STXS1p2TrainConfig::CategoriesToTrain /* From config/Categories.h */) {
-    categories1p2.emplace_back(
+  for (auto [cat, name] : TrainConfig.categoryNameMap) {
+    cutPerCategory.emplace_back(
         name, TCut(Form("HTXS_stage1_2_cat_pTjet30GeV_merged == %d",
                         static_cast<int>(cat))));
   }
@@ -28,7 +27,7 @@ void loadSTXS1p2Data(TMVA::Factory *factory, const std::string directory,
   gSystem->ChangeDirectory(directory.c_str());
   TMVA::DataLoader *loader = new TMVA::DataLoader(datasetName);
 
-  for (auto [varName, dtype] : variablesSTXS1p2 /* From config/Variables.h */) {
+  for (auto [varName, dtype] : TrainConfig.variables) {
     loader->AddVariable(varName, dtype);
   }
 
@@ -58,7 +57,7 @@ void loadSTXS1p2Data(TMVA::Factory *factory, const std::string directory,
     }
 
     // Add the data to the loader
-    for (auto [name, cut] : categories1p2) {
+    for (auto [name, cut] : cutPerCategory) {
       loader->AddTree(tree, name, 1.0, cut);
       if (verbose)
         std::cout << "Loaded category " << name << " with cut " << cut
@@ -73,27 +72,13 @@ void loadSTXS1p2Data(TMVA::Factory *factory, const std::string directory,
 
   loader->SetWeightExpression("trainWeight");
   TCut removeNaN;
-  for (auto [name, dtype] : variablesSTXS1p2) {
+  for (auto [name, dtype] : TrainConfig.variables) {
     removeNaN += Form("!TMath::IsNaN(%s)", name.c_str());
   }
 
   loader->PrepareTrainingAndTestTree(
       removeNaN, "SplitMode=Random:NormMode=EqualNumEvents");
 
-  std::stringstream bdtString;
-  bdtString << ":!H" << ":!V"
-            << ":NTrees=" << STXS1p2Params::nTrees
-            << ":MaxDepth=" << STXS1p2Params::maxdepth
-            << ":MinNodeSize=" << STXS1p2Params::minNodeSize << "%"
-            << ":BoostType=Grad"
-            << ":nCuts=" << STXS1p2Params::nCuts << ":UseBaggedBoost=True"
-            << ":Shrinkage=" << STXS1p2Params::Shrinkage
-            << ":BaggedSampleFraction=" << STXS1p2Params::BaggedSampleFraction
-            << ":VarTransform=D,G,N";
-
-  if (verbose)
-    std::cout << "Training the BDT with the following configuration\n\t"
-              << bdtString.str() << std::endl;
-
-  factory->BookMethod(loader, TMVA::Types::kBDT, "BDT", bdtString.str());
+  factory->BookMethod(loader, TMVA::Types::kBDT, "BDT",
+                      TrainConfig.hyperparams.BDTString());
 }

@@ -1,11 +1,11 @@
 #ifndef CATEGORIES_H
 #define CATEGORIES_H
+
 #include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
 #include <TCut.h>
 #include <map>
-#include <vector>
 
-namespace STXS1p2TrainConfig {
+namespace STXSTrainCategories {
 inline const std::map<STXS_STAGE_1_2_MERGED, std::string> CategoriesToTrain = {
 
     //{STXS_STAGE_1_2_MERGED::UNKNOWN, "UNKNOWN"},
@@ -50,78 +50,13 @@ inline const std::map<STXS_STAGE_1_2_MERGED, std::string> CategoriesToTrain = {
     {STXS_STAGE_1_2_MERGED::TTH, "TTH"},
 };
 
-inline std::vector<std::string> TrainedCategoryNames = {
-    // "Unknown",
-
-    // Gluon fusion
-    "Untagged_Pt200above",
-
-    "Untagged_0jet_Pt0To10",
-    "Untagged_0jet_Pt10above",
-
-    "Untagged_1jet_Pt0To60",
-    "Untagged_1jet_Pt60To120",
-    "Untagged_1jet_Pt120To200",
-
-    "Untagged_2jet_Pt0To60_Mjj0To350",
-    "Untagged_2jet_Pt60To120_Mjj0To350",
-    "Untagged_2jet_Pt120To200_Mjj0To350",
-    "Untagged_2jet_Mjj350above",
-
-    // VBF
-    "qq2Hqq_rest",
-
-    "qq2Hqq_2jet_Mjj60To120",
-    "qq2Hqq_2jet_Pt200above_Mjj350above",
-    "qq2Hqq_2jet_Pt0To200_Mjj350To700_Hjj_pt0To25",
-    "qq2Hqq_2jet_Pt0To200_Mjj350above_Hjj_pt25above",
-
-    "qq2Hqq_2jet_MJJ700above_Pt0To200_Hjj_pt0To25",
-    // qq -> WH
-    "VH_lep_Pt0To150",
-
-    "VH_lep_Pt150above",
-
-    // ttH
-    "ttH",
+inline const std::map<STXS_STAGE_0, std::string> CategoriesToTrainStage0 = {
+    // {STXS_STAGE_0::UNKNOWN, "UNKNOWN"},
+    {STXS_STAGE_0::GG2H, "GG2H"},     {STXS_STAGE_0::VBF, "VBF"},
+    {STXS_STAGE_0::VH2HQQ, "VH2HQQ"}, {STXS_STAGE_0::QQ2HLNU, "QQ2HLNU"},
+    {STXS_STAGE_0::QQ2HLL, "QQ2HLL"}, {STXS_STAGE_0::GG2HLL, "GG2HLL"},
+    {STXS_STAGE_0::TTH, "TTH"},
 };
-
-inline std::vector<STXS_STAGE_1_2_MERGED> TrainedCategories = {
-
-    // STXS_STAGE_1_2_MERGED::UNKNOWN,
-
-    // Gluon fusion
-    STXS_STAGE_1_2_MERGED::GG2H_PTH_GT200,
-
-    STXS_STAGE_1_2_MERGED::GG2H_0J_PTH_0_10,
-    STXS_STAGE_1_2_MERGED::GG2H_0J_PTH_GT10,
-
-    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_0_60,
-    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_60_120,
-    STXS_STAGE_1_2_MERGED::GG2H_1J_PTH_120_200,
-
-    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_0_60,
-    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_60_120,
-    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_0_350_PTH_120_200,
-    STXS_STAGE_1_2_MERGED::GG2H_GE2J_MJJ_GT350,
-
-    // VBF
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_rest,
-
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_60_120,
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT350_PTH_GT200,
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_350_700_PTH_0_200_PTHJJ_0_25,
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT350_PTH_0_200_PTHJJ_GT25,
-
-    STXS_STAGE_1_2_MERGED::QQ2HQQ_GE2J_MJJ_GT700_PTH_0_200_PTHJJ_0_25,
-    // qq -> WH
-    STXS_STAGE_1_2_MERGED::VH_lep_PTV_0_150,
-
-    STXS_STAGE_1_2_MERGED::VH_lep_PTV_GT150,
-
-    // ttH
-    STXS_STAGE_1_2_MERGED::TTH,
-};
-} // namespace STXS1p2TrainConfig
+} // namespace STXSTrainCategories
 
 #endif

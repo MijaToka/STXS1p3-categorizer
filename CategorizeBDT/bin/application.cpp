@@ -1,8 +1,7 @@
 #include "STXSCategorizer/CategorizeBDT/src/BDTClassifier.cpp"
-#include "STXSCategorizer/CategorizeBDT/src/config/Categories.h"
+#include "STXSCategorizer/CategorizeBDT/src/config/TrainConfig.h"
 #include "STXSCategorizer/CategorizeBDT/src/config/Variables.h"
 #include "STXSCategorizer/CategorizeBDT/src/parseArgsApply.cpp"
-#include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
 // #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RVec.hxx>
@@ -30,6 +29,7 @@ int main(int argc, char *argv[]) {
 
   BDTClassifier classifier(weightFile, variablesSTXS1p2);
 
+  BDTConfig TrainConfig = TrainConfig1p2;
   std::stringstream bdt_var_expr;
   bdt_var_expr << "ROOT::RVec<Float_t>{";
 
@@ -59,27 +59,23 @@ int main(int argc, char *argv[]) {
                         std::max_element(scores.begin(), scores.end()));
                   },
                   {"BDT_Scores"})
-          .Define(
-              "BDT_stage1_2_cat_pTjet30GeV_merged",
-              [](size_t catIdx) {
-                /* from config/Categories.h */
-                return (catIdx < STXS1p2TrainConfig::TrainedCategories.size())
-                           ? static_cast<int>(
-                                 STXS1p2TrainConfig::TrainedCategories[catIdx])
-                           : static_cast<int>(STXS_STAGE_1_2_MERGED::UNKNOWN);
-              },
-              {"BDT_Category"});
+          .Define(TrainConfig.classificationColumn,
+                  [&TrainConfig](size_t catIdx) {
+                    /* from config/Categories.h */
+                    return static_cast<int>(TrainConfig.getNthCategory(catIdx));
+                  },
+                  {"BDT_Category"});
 
-  size_t i = 0;
   std::filesystem::path outputFile =
       std::filesystem::path(outputDir) / "classification.root";
+
   df_classified.Snapshot(
       "Events", outputFile.string(),
       {"EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
        "EventWeight_lumi250", "EventWeight_lumi300", "EventWeight_lumi350",
 
        "BDT_Category", "BDT_Scores", "HTXS_stage1_2_cat_pTjet30GeV_merged",
-       "BDT_stage1_2_cat_pTjet30GeV_merged"});
+       TrainConfig.classificationColumn});
 
   int nEvents = df_classified.Count().GetValue();
   if (verbose)

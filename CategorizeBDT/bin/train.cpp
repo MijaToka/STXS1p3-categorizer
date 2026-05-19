@@ -1,4 +1,5 @@
-#include "STXSCategorizer/CategorizeBDT/src/TrainStep1p2.cpp"
+#include "STXSCategorizer/CategorizeBDT/src/TrainStep.cpp"
+#include "STXSCategorizer/CategorizeBDT/src/config/TrainConfig.h"
 #include "STXSCategorizer/CategorizeBDT/src/parseArgsTrain.cpp"
 #include "STXSCategorizer/CommonUtils/interface/Preprocess.h"
 #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
@@ -25,6 +26,8 @@ int main(int argc, char *argv[]) {
 
   std::string directory, output, dataSetName;
   bool preprocess, verbose;
+
+  BDTConfig TrainConfig = TrainConfig1p2;
 
   parseArguments(argc, argv, directory, output, preprocess, verbose);
 
@@ -106,7 +109,7 @@ int main(int argc, char *argv[]) {
       "TMVAMulticlassSTXS0", outfile,
       ":!V:!Silent:Color:DrawProgressBar:AnalysisType=Multiclass");
 
-  loadSTXS1p2Data(factory, output, dataSetName, trainFiles, verbose);
+  loadSTXSData(factory, output, dataSetName, trainFiles, TrainConfig, verbose);
 
   factory->TrainAllMethods();
   factory->TestAllMethods();
