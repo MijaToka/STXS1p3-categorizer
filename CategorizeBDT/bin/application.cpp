@@ -1,7 +1,7 @@
 #include "STXSCategorizer/CategorizeBDT/src/BDTClassifier.cpp"
 #include "STXSCategorizer/CategorizeBDT/src/config/TrainConfig.h"
-#include "STXSCategorizer/CategorizeBDT/src/config/Variables.h"
 #include "STXSCategorizer/CategorizeBDT/src/parseArgsApply.cpp"
+#include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
 // #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RVec.hxx>
@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iterator>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -19,17 +20,32 @@ int main(int argc, char *argv[]) {
 
   ROOT::EnableImplicitMT();
 
+  // Initialize arguments
   std::string weightFile, outputDir;
   std::vector<std::string> files;
   bool verbose;
+  int version;
 
-  parseArguments(argc, argv, files, weightFile, outputDir, verbose);
+  parseArguments(argc, argv, files, weightFile, outputDir, version, verbose);
 
+  // Initialize BDT configuration
+  std::unique_ptr<BDTConfigBase> TrainConfig;
+  switch (version) {
+  case 0:
+    TrainConfig = std::make_unique<BDTConfig<STXS_STAGE_0>>(TrainConfig0);
+    break;
+  case 2:
+    TrainConfig =
+        std::make_unique<BDTConfig<STXS_STAGE_1_2_MERGED>>(TrainConfig1p2);
+    break;
+  }
+
+  BDTClassifier classifier(weightFile, TrainConfig->variables);
+
+  // Open the files to be categorized
   ROOT::RDataFrame df("Events", files);
 
-  BDTClassifier classifier(weightFile, variablesSTXS1p2);
-
-  BDTConfig TrainConfig = TrainConfig1p2;
+  // Build the vector with the BDT variables
   std::stringstream bdt_var_expr;
   bdt_var_expr << "ROOT::RVec<Float_t>{";
 
@@ -44,6 +60,7 @@ int main(int argc, char *argv[]) {
   }
   bdt_var_expr << "}";
 
+  // Classification
   auto df_classified =
       df.Define("BDT_variables", bdt_var_expr.str())
           .DefineSlot(
@@ -59,23 +76,25 @@ int main(int argc, char *argv[]) {
                         std::max_element(scores.begin(), scores.end()));
                   },
                   {"BDT_Scores"})
-          .Define(TrainConfig.classificationColumn,
+          .Define(TrainConfig->classificationColumn,
                   [&TrainConfig](size_t catIdx) {
                     /* from config/Categories.h */
-                    return static_cast<int>(TrainConfig.getNthCategory(catIdx));
+                    return static_cast<int>(
+                        TrainConfig->getNthCategory(catIdx));
                   },
                   {"BDT_Category"});
 
   std::filesystem::path outputFile =
       std::filesystem::path(outputDir) / "classification.root";
 
-  df_classified.Snapshot(
-      "Events", outputFile.string(),
-      {"EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
-       "EventWeight_lumi250", "EventWeight_lumi300", "EventWeight_lumi350",
+  df_classified.Snapshot("Events", outputFile.string(),
+                         {"EventWeight_lumi18", "EventWeight_lumi9",
+                          "EventWeight_lumi138", "EventWeight_lumi250",
+                          "EventWeight_lumi300", "EventWeight_lumi350",
 
-       "BDT_Category", "BDT_Scores", "HTXS_stage1_2_cat_pTjet30GeV_merged",
-       TrainConfig.classificationColumn});
+                          "BDT_Category", "BDT_Scores", "HTXS_stage_0",
+                          "HTXS_stage1_2_cat_pTjet30GeV_merged",
+                          TrainConfig->classificationColumn});
 
   int nEvents = df_classified.Count().GetValue();
   if (verbose)

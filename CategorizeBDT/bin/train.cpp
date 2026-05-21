@@ -16,6 +16,7 @@
 #include <TTree.h>
 #include <cstdlib>
 #include <filesystem>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -24,13 +25,14 @@ int main(int argc, char *argv[]) {
 
   ROOT::EnableImplicitMT();
 
+  // Initialize arguments
   std::string directory, output, dataSetName;
   bool preprocess, verbose;
+  int version;
 
-  BDTConfig TrainConfig = TrainConfig1p2;
+  parseArguments(argc, argv, directory, output, preprocess, version, verbose);
 
-  parseArguments(argc, argv, directory, output, preprocess, verbose);
-
+  // Initialize training data directory
   dataSetName = std::filesystem::path(directory).filename().string();
 
   std::vector<std::string> signalModes = {"ggH125",    "VBFH125",    "ZH125",
@@ -109,7 +111,20 @@ int main(int argc, char *argv[]) {
       "TMVAMulticlassSTXS0", outfile,
       ":!V:!Silent:Color:DrawProgressBar:AnalysisType=Multiclass");
 
-  loadSTXSData(factory, output, dataSetName, trainFiles, TrainConfig, verbose);
+  switch (version) {
+  case 0:
+    loadSTXSData(factory, output, dataSetName, trainFiles, TrainConfig0,
+                 verbose);
+    break;
+  case 2:
+    loadSTXSData(factory, output, dataSetName, trainFiles, TrainConfig1p2,
+                 verbose);
+    break;
+  default:
+    std::cerr << "Version " << version
+              << " correctly parsed but not implementedf" << std::endl;
+    exit(EXIT_FAILURE);
+  }
 
   factory->TrainAllMethods();
   factory->TestAllMethods();

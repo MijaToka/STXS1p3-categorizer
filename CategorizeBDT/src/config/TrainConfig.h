@@ -5,9 +5,12 @@
 #include "STXSCategorizer/CategorizeBDT/src/config/Variables.h"
 #include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
 #include <TMath.h>
+#include <cstdlib>
+#include <iostream>
 #include <map>
 #include <sstream>
 #include <string>
+#include <utility>
 
 struct HyperParams {
   int nTrees = 800;
@@ -16,6 +19,7 @@ struct HyperParams {
   float minNodeSize = 2.5;
   float Shrinkage = 0.05;
   float BaggedSampleFraction = 0.6;
+  std::string VarTransform = "D,G,N";
 
   std::string BDTString() const {
     std::stringstream ss;
@@ -26,27 +30,44 @@ struct HyperParams {
        << ":nCuts=" << nCuts << ":UseBaggedBoost=True"
        << ":Shrinkage=" << Shrinkage
        << ":BaggedSampleFraction=" << BaggedSampleFraction
-       << ":VarTransform=D,G,N";
+       << ":VarTransform=" << VarTransform;
     return ss.str();
   };
 };
 
-template <typename STXS_STAGE> struct BDTConfig {
+struct BDTConfigBase {
+  virtual ~BDTConfigBase() = default;
   HyperParams hyperparams;
   std::map<std::string, char> variables;
   std::string discriminantColumn;
   std::string classificationColumn;
+  std::vector<std::string> categoryNames;
+  virtual std::string getNthName(size_t catIdx) = 0;
+  virtual int getNthCategory(size_t catIdx) = 0;
+};
+
+template <typename STXS_STAGE> struct BDTConfig : public BDTConfigBase {
+
   std::map<STXS_STAGE, std::string> categoryNameMap;
   std::vector<STXS_STAGE> categories;
-  std::vector<std::string> categoryNames;
 
-  STXS_STAGE getNthCategory(size_t catIdx) {
+  BDTConfig(HyperParams hp, std::map<std::string, char> vars,
+            std::string discCol, std::string classCol,
+            std::map<STXS_STAGE, std::string> catNameMap) {
+    hyperparams = hp;
+    variables = std::move(vars);
+    discriminantColumn = std::move(discCol);
+    classificationColumn = std::move(classCol);
+    categoryNameMap = std::move(catNameMap);
+  }
+
+  int getNthCategory(size_t catIdx) {
     if (categories.empty()) {
       for (auto &[cat, name] : categoryNameMap)
         categories.push_back(cat);
     }
-    return (catIdx < categories.size()) ? categories[catIdx]
-                                        : static_cast<STXS_STAGE>(0);
+    return (catIdx < categories.size()) ? static_cast<int>(categories[catIdx])
+                                        : 0;
   };
 
   std::string getNthName(size_t catIdx) {
@@ -58,20 +79,21 @@ template <typename STXS_STAGE> struct BDTConfig {
   };
 };
 
-inline BDTConfig<STXS_STAGE_1_2_MERGED> TrainConfig1p2{
-    .hyperparams = HyperParams{},
-    .variables = variablesSTXS1p2 /* from Variables.h */,
-    .discriminantColumn = "HTXS_stage1_2_cat_pTjet30GeV_merged",
-    .classificationColumn = "BDT_stage1_2_cat_pTjet30GeV_merged",
-    .categoryNameMap =
-        STXSTrainCategories::CategoriesToTrain /* from Categories.h */
-};
+inline BDTConfig<STXS_STAGE_1_2_MERGED> TrainConfig1p2(
+    /* .hyperparams = */ HyperParams{},
+    /* .variables = */
+    STXSTrainVariables::variablesSTXS1p2,
+    /* .discriminantColumn = */ "HTXS_stage1_2_cat_pTjet30GeV_merged",
+    /* .classificationColumn = */ "BDT_stage1_2_cat_pTjet30GeV_merged",
+    /* .categoryNameMap = */
+    STXSTrainCategories::CategoriesToTrain);
 
 inline BDTConfig<STXS_STAGE_0> TrainConfig0{
-    .hyperparams = HyperParams{},
-    .variables = variablesSTXS1p2,
-    .discriminantColumn = "HTXS_stage_0",
-    .classificationColumn = "BDT_stage_0",
-    .categoryNameMap = STXSTrainCategories::CategoriesToTrainStage0};
+    /* .hyperparams = */ HyperParams{
+        .nTrees = 600, .maxdepth = 4, .Shrinkage = 0.1},
+    /* .variables = */ STXSTrainVariables::variablesSTXS1p2,
+    /* .discriminantColumn = */ "HTXS_stage_0",
+    /* .classificationColumn = */ "BDT_stage_0",
+    /* .categoryNameMap = */ STXSTrainCategories::CategoriesToTrainStage0};
 
 #endif

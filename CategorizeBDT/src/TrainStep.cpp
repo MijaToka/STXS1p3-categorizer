@@ -20,7 +20,7 @@ void loadSTXSData(TMVA::Factory *factory, const std::string directory,
 
   for (auto [cat, name] : TrainConfig.categoryNameMap) {
     cutPerCategory.emplace_back(
-        name, TCut(Form("HTXS_stage1_2_cat_pTjet30GeV_merged == %d",
+        name, TCut(Form("%s == %d", TrainConfig.discriminantColumn.c_str(),
                         static_cast<int>(cat))));
   }
 
@@ -60,7 +60,8 @@ void loadSTXSData(TMVA::Factory *factory, const std::string directory,
     for (auto [name, cut] : cutPerCategory) {
       loader->AddTree(tree, name, 1.0, cut);
       if (verbose)
-        std::cout << "Loaded category " << name << " with cut " << cut
+        std::cout << "Loaded " << tree->GetEntries(cut)
+                  << " events to category " << name << " with cut " << cut
                   << " on tree of file " << filePathStr << std::endl;
     }
 

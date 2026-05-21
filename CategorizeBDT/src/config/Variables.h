@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+namespace STXSTrainVariables {
 inline const std::map<std::string, char> variablesSTXS1p2 = {
     // Discriminants
     {"DVBF2j_ME", 'F'},
@@ -74,4 +75,46 @@ inline const std::map<std::string, char> variablesSTXS1p2 = {
     {"PFMET_pt", 'F'},
 };
 
+inline const std::map<std::string, char> variablesSTXS0 = {
+    // Discriminants
+    {"DVBF2j_ME", 'F'},
+    {"DVBF1j_ME", 'F'},
+    {"DWHh_ME", 'F'},
+    {"DZHh_ME", 'F'},
+    {"ZZCand_KD_bestCand", 'F'},
+
+    // ZZ candidate features
+    {"ZZCand_pt_bestCand", 'F'},
+    {"ZZCand_eta_bestCand", 'F'},
+    {"ZZCand_phi_bestCand", 'F'},
+    {"ZZCand_mass_bestCand", 'F'},
+    {"ZZCand_costheta1_bestCand", 'F'},
+    {"ZZCand_costheta2_bestCand", 'F'},
+    {"ZZCand_costhetastar_bestCand", 'F'},
+    {"ZZCand_Phi1_bestCand", 'F'},
+    {"ZZCand_nExtraLep_bestCand", 'I'},
+
+    // Jet features
+    {"nCleanedJetsPt30", 'I'},
+    {"nBtagged_filtered", 'I'},
+
+    // Dijet features
+    {"deltaEta_jj", 'F'},
+    {"deltaPhi_jj", 'F'},
+    {"m_jj", 'F'},
+
+    // Extra lepton features
+    {"LepPt_4", 'F'},
+    {"LepPt_5", 'F'},
+    {"LepEta_4", 'F'},
+    {"LepEta_5", 'F'},
+    {"LepPhi_4", 'F'},
+    {"LepPhi_5", 'F'},
+    {"LepPdgId_4", 'I'},
+    {"LepPdgId_5", 'I'},
+
+    // MET
+    {"PFMET_pt", 'F'},
+};
+} // namespace STXSTrainVariables
 #endif

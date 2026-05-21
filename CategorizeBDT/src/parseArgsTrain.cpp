@@ -29,13 +29,22 @@ std::string help_message() {
   return ss.str();
 };
 
-enum class Flag { HELP, PREPROCESS, VERBOSE, DIRECTORY, PATH, UNKNOWN };
+enum class Flag {
+  HELP,
+  PREPROCESS,
+  VERBOSE,
+  DIRECTORY,
+  PATH,
+  VERSION,
+  UNKNOWN
+};
 
 static const std::map<std::string, Flag> flagMap = {
     {"-h", Flag::HELP},           {"--help", Flag::HELP},
     {"-p", Flag::PREPROCESS},     {"--preprocess", Flag::PREPROCESS},
     {"--verbose", Flag::VERBOSE}, {"-d", Flag::DIRECTORY},
-    {"-o", Flag::PATH},           {"--output", Flag::PATH}};
+    {"-o", Flag::PATH},           {"--output", Flag::PATH},
+    {"-v", Flag::VERSION}};
 
 Flag getFlag(const std::string &arg) {
   auto keyvalPair = flagMap.find(arg);
@@ -43,7 +52,8 @@ Flag getFlag(const std::string &arg) {
 }
 
 void parseArguments(int argc, char *argv[], std::string &directory,
-                    std::string &output, bool &preprocess, bool &verbose) {
+                    std::string &output, bool &preprocess, int &version,
+                    bool &verbose) {
 
   bool hasDir(false);
 
@@ -89,6 +99,26 @@ void parseArguments(int argc, char *argv[], std::string &directory,
     case Flag::PATH: {
       std::filesystem::path path(argv[++i]);
       output = std::filesystem::absolute(path).string();
+      break;
+    }
+
+    case Flag::VERSION: {
+      try {
+        version = std::stoi(argv[++i]);
+        switch (version) {
+        case 0:
+        case 2:
+          break;
+        default:
+          throw std::invalid_argument("must be 0 or 2");
+          break;
+        }
+        if (verbose)
+          std::cout << "Running version: " << version << std::endl;
+      } catch (const std::exception &e) {
+        std::cerr << "Invalid -v value: " << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+      }
       break;
     }
 

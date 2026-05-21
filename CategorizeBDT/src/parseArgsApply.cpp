@@ -1,10 +1,12 @@
 #include <algorithm>
 #include <cstdlib>
+#include <exception>
 #include <filesystem>
 #include <iostream>
 #include <map>
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -32,14 +34,14 @@ std::string help_message() {
   return ss.str();
 };
 
-enum class Flag { HELP, VERBOSE, FILE, OUTPUT, WEIGHTS, UNKNOWN };
+enum class Flag { HELP, VERBOSE, FILE, OUTPUT, WEIGHTS, VERSION, UNKNOWN };
 
 static const std::map<std::string, Flag> flagMap = {
     {"-h", Flag::HELP},           {"--help", Flag::HELP},
     {"-f", Flag::FILE},           {"--file", Flag::FILE},
     {"--verbose", Flag::VERBOSE}, {"-w", Flag::WEIGHTS},
     {"--weights", Flag::WEIGHTS}, {"-o", Flag::OUTPUT},
-    {"--output", Flag::OUTPUT}};
+    {"--output", Flag::OUTPUT},   {"-v", Flag::VERSION}};
 
 Flag getFlag(const std::string &arg) {
   auto keyvalPair = flagMap.find(arg);
@@ -47,7 +49,7 @@ Flag getFlag(const std::string &arg) {
 }
 
 void parseArguments(int argc, char *argv[], std::vector<std::string> &files,
-                    std::string &weightFile, std::string &output,
+                    std::string &weightFile, std::string &output, int &version,
                     bool &verbose) {
 
   bool hasFiles(false), hasWeights(false);
@@ -99,6 +101,25 @@ void parseArguments(int argc, char *argv[], std::vector<std::string> &files,
     case Flag::OUTPUT: {
       std::filesystem::path path(argv[++i]);
       output = std::filesystem::absolute(path).string();
+      break;
+    }
+    case Flag::VERSION: {
+      try {
+        version = std::stoi(argv[++i]);
+        switch (version) {
+        case 0:
+        case 2:
+          break;
+        default:
+          throw std::invalid_argument("must be 0 or 2");
+          break;
+        }
+        if (verbose)
+          std::cout << "Running version: " << version << std::endl;
+      } catch (const std::exception &e) {
+        std::cerr << "Invalid -v value: " << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+      }
       break;
     }
 
