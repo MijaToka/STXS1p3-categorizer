@@ -90,8 +90,8 @@ inline BDTConfig<STXS_STAGE_1_2_MERGED> TrainConfig1p2(
 
 inline BDTConfig<STXS_STAGE_0> TrainConfig0{
     /* .hyperparams = */ HyperParams{
-        .nTrees = 600, .maxdepth = 4, .Shrinkage = 0.1},
-    /* .variables = */ STXSTrainVariables::variablesSTXS1p2,
+        .nTrees = 600, .maxdepth = 10, .Shrinkage = 0.1},
+    /* .variables = */ STXSTrainVariables::variablesSTXS0,
     /* .discriminantColumn = */ "HTXS_stage_0",
     /* .classificationColumn = */ "BDT_stage_0",
     /* .categoryNameMap = */ STXSTrainCategories::CategoriesToTrainStage0};
