@@ -159,13 +159,16 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
       "DVBF1j_ME_noC", "DWHh_ME_noC", "DZHh_ME_noC", "ZZCand_KD",
       "ZZCand_KD_bestCand",
 
-      // Event weights and label
+      // Event weights
       "EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
       "EventWeight_lumi250", "EventWeight_lumi300", "EventWeight_lumi350",
-      "production_mode", "HTXS_stage_0", "overallEventWeight",
-      "HTXS_stage1_2_cat_pTjet30GeV", "HTXS_stage1_2_cat_pTjet30GeV_merged",
-      "genWeight", "puWeight", "trainWeight",
-      "HTXS_stage1_2_cat_pTjet30GeV_label", "genEventSumw"};
+      "production_mode", "overallEventWeight", "genWeight", "puWeight",
+      "trainWeight", "genEventSumw",
+
+      // MC STXS categories
+      "HTXS_stage_0", "HTXS_stage1_2_cat_pTjet30GeV",
+      "HTXS_stage1_2_cat_pTjet30GeV_merged",
+      "HTXS_stage1_2_cat_pTjet30GeV_label"};
 
   std::filesystem::create_directories(output_dir);
   std::stringstream ss;
