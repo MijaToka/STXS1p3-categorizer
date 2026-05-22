@@ -5,6 +5,7 @@
 // #include "STXSCategorizer/CommonUtils/interface/STXS_common.h"
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RVec.hxx>
+#include <RtypesCore.h>
 #include <TMVA/Reader.h>
 #include <TROOT.h>
 #include <algorithm>
@@ -76,6 +77,11 @@ int main(int argc, char *argv[]) {
                         std::max_element(scores.begin(), scores.end()));
                   },
                   {"BDT_Scores"})
+          .Define("HTXS_BDTIdx",
+                  [&TrainConfig](Int_t htxs) {
+                    return TrainConfig->getBDTCategory(htxs);
+                  },
+                  {TrainConfig->discriminantColumn})
           .Define(TrainConfig->classificationColumn,
                   [&TrainConfig](size_t catIdx) {
                     /* from config/Categories.h */
@@ -87,14 +93,14 @@ int main(int argc, char *argv[]) {
   std::filesystem::path outputFile =
       std::filesystem::path(outputDir) / "classification.root";
 
-  df_classified.Snapshot("Events", outputFile.string(),
-                         {"EventWeight_lumi18", "EventWeight_lumi9",
-                          "EventWeight_lumi138", "EventWeight_lumi250",
-                          "EventWeight_lumi300", "EventWeight_lumi350",
+  df_classified.Snapshot(
+      "Events", outputFile.string(),
+      {"EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
+       "EventWeight_lumi250", "EventWeight_lumi300", "EventWeight_lumi350",
+       "trainWeight",
 
-                          "BDT_Category", "BDT_Scores", "HTXS_stage_0",
-                          "HTXS_stage1_2_cat_pTjet30GeV_merged",
-                          TrainConfig->classificationColumn});
+       "BDT_Category", "BDT_Scores", "HTXS_BDTIdx",
+       TrainConfig->discriminantColumn, TrainConfig->classificationColumn});
 
   int nEvents = df_classified.Count().GetValue();
   if (verbose)

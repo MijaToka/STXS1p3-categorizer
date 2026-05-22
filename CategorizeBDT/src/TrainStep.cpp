@@ -71,7 +71,7 @@ void loadSTXSData(TMVA::Factory *factory, const std::string directory,
   std::cout << "Finished adding all the trees to the channels to the loader"
             << std::endl;
 
-  loader->SetWeightExpression("trainWeight");
+  loader->SetWeightExpression("");
   TCut removeNaN;
   for (auto [name, dtype] : TrainConfig.variables) {
     removeNaN += Form("!TMath::IsNaN(%s)", name.c_str());

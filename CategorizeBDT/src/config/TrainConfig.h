@@ -4,7 +4,9 @@
 #include "STXSCategorizer/CategorizeBDT/src/config/Categories.h"
 #include "STXSCategorizer/CategorizeBDT/src/config/Variables.h"
 #include "STXSCategorizer/CommonUtils/interface/STXS_Categories.h"
+#include <RtypesCore.h>
 #include <TMath.h>
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -44,6 +46,8 @@ struct BDTConfigBase {
   std::vector<std::string> categoryNames;
   virtual std::string getNthName(size_t catIdx) = 0;
   virtual int getNthCategory(size_t catIdx) = 0;
+  virtual Int_t getBDTCategory(Int_t HTXS_cat) = 0;
+  virtual void initializeCategoryVectors() = 0;
 };
 
 template <typename STXS_STAGE> struct BDTConfig : public BDTConfigBase {
@@ -59,24 +63,32 @@ template <typename STXS_STAGE> struct BDTConfig : public BDTConfigBase {
     discriminantColumn = std::move(discCol);
     classificationColumn = std::move(classCol);
     categoryNameMap = std::move(catNameMap);
+    initializeCategoryVectors();
   }
 
-  int getNthCategory(size_t catIdx) {
-    if (categories.empty()) {
-      for (auto &[cat, name] : categoryNameMap)
-        categories.push_back(cat);
+  void initializeCategoryVectors() {
+    for (auto &[cat, name] : categoryNameMap) {
+      categories.push_back(cat);
+      categoryNames.push_back(name);
     }
+  }
+  int getNthCategory(size_t catIdx) {
     return (catIdx < categories.size()) ? static_cast<int>(categories[catIdx])
                                         : 0;
   };
 
   std::string getNthName(size_t catIdx) {
-    if (categoryNames.empty()) {
-      for (auto &[cat, name] : categoryNameMap)
-        categoryNames.push_back(name);
-    }
     return (catIdx < categories.size()) ? categoryNames[catIdx] : "UNKNOWN";
   };
+
+  Int_t getBDTCategory(Int_t HTXS_cat) {
+    auto it = find(categories.begin(), categories.end(),
+                   static_cast<STXS_STAGE>(HTXS_cat));
+    if (it == categories.end())
+      return -1;
+    else
+      return std::distance(categories.begin(), it);
+  }
 };
 
 inline BDTConfig<STXS_STAGE_1_2_MERGED> TrainConfig1p2(
