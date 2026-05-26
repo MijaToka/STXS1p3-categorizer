@@ -13,6 +13,12 @@
             ps: with ps; [
               numpy
               root
+              uproot
+              matplotlib
+              pandas
+              pandas-stubs
+              xgboost
+              scikit-learn
             ]
           ))
         ];
