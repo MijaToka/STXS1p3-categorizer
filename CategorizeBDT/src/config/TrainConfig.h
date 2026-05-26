@@ -21,7 +21,7 @@ struct HyperParams {
   float minNodeSize = 2.5;
   float Shrinkage = 0.05;
   float BaggedSampleFraction = 0.6;
-  std::string VarTransform = "D,G,N";
+  std::string VarTransform = "N,G,D";
 
   std::string BDTString() const {
     std::stringstream ss;

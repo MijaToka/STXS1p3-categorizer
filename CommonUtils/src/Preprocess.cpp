@@ -254,7 +254,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                ROOT::VecOps::RVec<Float_t> ZZMass, Char_t nJets, Short_t idx) {
               return (nJets >= 2)
                          ? DVBF2j_ME(P_JJVBF[idx], P_JJQCD[idx], ZZMass[idx])
-                         : -999.f;
+                         : -1.f;
             },
             {"ZZCand_P_JJVBF_SIG_ghv1_1_JHUGen_JECNominal",
              "ZZCand_P_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", "ZZCand_mass",
@@ -268,7 +268,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                     return (nJets == 1)
                                ? DVBF1j_ME(P_JVBF[idx], P_JVBF_aux[idx],
                                            P_JQCD[idx], ZZMass[idx])
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_JVBF_SIG_ghv1_1_JHUGen_JECNominal",
                    "ZZCand_P_JVBF_SIG_ghv1_1_JHUGen_JECNominal_aux",
@@ -285,7 +285,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                                ? DWHh_ME(P_HadWH[idx], P_JJQCD[idx],
                                          P_HadWH_mvajj[idx],
                                          P_HadWH_mvajj_true[idx], ZZMass[idx])
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_HadWH_SIG_ghw1_1_JHUGen_JECNominal",
                    "ZZCand_P_HadWH_SIG_ghw1_1_JHUGen_JECNominal_mavjj",
@@ -303,7 +303,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                                ? DWHh_ME(P_HadZH[idx], P_JJQCD[idx],
                                          P_HadZH_mvajj[idx],
                                          P_HadZH_mvajj_true[idx], ZZMass[idx])
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_HadZH_SIG_ghz1_1_JHUGen_JECNominal",
                    "ZZCand_P_HadZH_SIG_ghz1_1_JHUGen_JECNominal_mavjj",
@@ -316,7 +316,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                      Short_t idx) {
                     return (nJets >= 2)
                                ? 1.f / (1.f + P_JJQCD[idx] / P_JJVBF[idx])
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_JJVBF_SIG_ghv1_1_JHUGen_JECNominal",
                    "ZZCand_P_JJQCD_SIG_ghg2_1_JHUGen_JECNominal",
@@ -329,7 +329,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                     return (nJets == 1)
                                ? 1.f / (1.f + P_JQCD[idx] / (P_JVBF[idx] *
                                                              P_JVBF_aux[idx]))
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_JVBF_SIG_ghv1_1_JHUGen_JECNominal",
                    "ZZCand_P_JVBF_SIG_ghv1_1_JHUGen_JECNominal_aux",
@@ -346,7 +346,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                                      (1.f +
                                       (P_HadWH_mvajj_true[idx] * P_JJQCD[idx]) /
                                           (P_HadWH_mvajj[idx] * P_HadWH[idx]))
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_HadWH_SIG_ghw1_1_JHUGen_JECNominal",
                    "ZZCand_P_HadWH_SIG_ghw1_1_JHUGen_JECNominal_mavjj",
@@ -364,7 +364,7 @@ ROOT::RDF::RNode setup(std::string &file, const std::string &mode) {
                                      (1.f +
                                       (P_HadZH_mvajj_true[idx] * P_JJQCD[idx]) /
                                           (P_HadZH_mvajj[idx] * P_HadZH[idx]))
-                               : -999.f;
+                               : -1.f;
                   },
                   {"ZZCand_P_HadZH_SIG_ghz1_1_JHUGen_JECNominal",
                    "ZZCand_P_HadZH_SIG_ghz1_1_JHUGen_JECNominal_mavjj",
