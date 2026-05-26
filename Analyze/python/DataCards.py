@@ -1,6 +1,6 @@
 from ROOT import TCanvas
 from dataclasses import dataclass, field
-from typing import IO,Optional
+from typing import IO, Optional
 from numpy import round
 from STXSCategorizer.Analyze.SetupPlots import PlotsKwarg
 
@@ -168,7 +168,9 @@ def write_data_card(
     return
 
 
-def data_cards_from_summaryPlot(config: PlotsKwarg, canvas: TCanvas, dir: str, version:int):
+def data_cards_from_summaryPlot(
+    config: PlotsKwarg, canvas: TCanvas, dir: str, version: int
+):
     for catIdx, category in enumerate(config.get("categories", [])):
         processList = []
         totalExpected = 0
