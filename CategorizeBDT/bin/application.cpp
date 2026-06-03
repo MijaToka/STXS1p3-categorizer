@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <filesystem>
+#include <iostream>
 #include <iterator>
 #include <memory>
 #include <string>
@@ -39,6 +40,13 @@ int main(int argc, char *argv[]) {
     TrainConfig =
         std::make_unique<BDTConfig<STXS_STAGE_1_2_MERGED>>(TrainConfig1p2);
     break;
+  case 3:
+    TrainConfig = std::make_unique<BDTConfig<STXS_STAGE_0>>(TrainConfig0XGB);
+    break;
+  default:
+    std::cerr << "Version correclty parsed but configuration not implemented"
+              << std::endl;
+    exit(EXIT_FAILURE);
   }
 
   BDTClassifier classifier(weightFile, TrainConfig->variables);
@@ -98,6 +106,8 @@ int main(int argc, char *argv[]) {
       {"EventWeight_lumi18", "EventWeight_lumi9", "EventWeight_lumi138",
        "EventWeight_lumi250", "EventWeight_lumi300", "EventWeight_lumi350",
        "trainWeight",
+
+       "ZZCand_nExtraLep_bestCand", "nCleanedJetsPt30", "production_mode",
 
        "BDT_Category", "BDT_Scores", "HTXS_BDTIdx",
        TrainConfig->discriminantColumn, TrainConfig->classificationColumn});

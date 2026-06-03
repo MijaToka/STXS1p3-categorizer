@@ -109,6 +109,7 @@ void parseArguments(int argc, char *argv[], std::vector<std::string> &files,
         switch (version) {
         case 0:
         case 2:
+        case 3:
           break;
         default:
           throw std::invalid_argument("must be 0 or 2");
