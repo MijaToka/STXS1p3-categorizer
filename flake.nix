@@ -18,6 +18,7 @@
         imports = [
           ./Categorize/package.nix
           ./CategorizeBDT/package.nix
+          ./CategorizeXGB/package.nix
           ./package.nix
           ./shell.nix
         ];

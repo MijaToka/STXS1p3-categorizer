@@ -6,7 +6,7 @@ install(TARGETS ${PROJECT_NAME}-xdg-bdt
   RUNTIME DESTINATION bin
 )
 
-[[ 
+#[[ 
 add_library(XGBApply
   src/STXS_categorization0.cpp
   src/STXS_categorization1p2.cpp
@@ -18,13 +18,13 @@ add_library(XGBApply
 target_link_libraries(${PROJECT_NAME}-xdg-bdt
   PUBLIC
     ${ROOT_LIBRARIES}
+    ROOT::TMVA
   PRIVATE
-    [[
-    Scripts
-    ]]
+    #Scripts
     STXS_CommonUtils
 )
 
-target_include_directories(Scripts
+#[[target_include_directories(XGBApply
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
+]]

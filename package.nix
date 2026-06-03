@@ -34,6 +34,7 @@
             cmakeFlags = prev.cmakeFlags ++ [
               "-DBUILD_CATEGORIZE=ON"
               "-DBUILD_CATEGORIZEBDT=ON"
+              "-DBUILD_CATEGORIZEXGB=ON"
             ];
           }
         );

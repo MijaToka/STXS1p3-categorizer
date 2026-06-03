@@ -6,7 +6,7 @@
     }:
     {
       packages = {
-        trainBDT = self'.packages.baseProgram.overrideAttrs (
+        applyXGB = self'.packages.baseProgram.overrideAttrs (
           final: prev: {
             src = ./..;
             pname = prev.pname + "XGB";
