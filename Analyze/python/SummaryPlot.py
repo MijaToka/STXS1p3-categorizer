@@ -1,7 +1,6 @@
 import ROOT
 from ROOT import TCanvas, RDataFrame, TLegend, TPad, TH1F, THStack, TLatex, TBox
 from numpy.typing import NDArray
-from STXSCategorizer.Analyze.UtilFunctions import AMS_2, assert_lumi
 import numpy as np
 from dataclasses import dataclass
 
@@ -47,6 +46,7 @@ def makePlots(
     lumi: int = 138,
 ) -> tuple[THStack, NDArray[TH1F], TLegend]:
     assert len(df_list) == len(categories)
+    from STXSCategorizer.Analyze.UtilFunctions import assert_lumi
     assert_lumi(lumi)
 
     hists = np.empty(len(modes) + len(extraHistograms), dtype=TH1F)
@@ -76,7 +76,7 @@ def makePlots(
     for modeIdx, mode in enumerate(modes):
         for catIdx, df in enumerate(df_list):
             nEventMap[(catIdx, modeIdx)] = df.Filter(f'{column}=="{mode}"').Sum(
-                "EventWeight_lumi{}".format(lumi)
+                "EventWeight_lumi{}".format(lumi) if lumi != 0 else ""
             )
 
     ROOT.RDF.RunGraphs(list(nEventMap.values()))
@@ -93,13 +93,15 @@ def makePlots(
         stack.Add(hists[modeIdx] / hists[totalIdx])
         legend.AddEntry(hists[modeIdx], mode, "f")
 
+    from STXSCategorizer.Analyze.UtilFunctions import AMS_2
+    
     for catIdx, category in enumerate(categories):
         signal = hists[sigIdx].GetBinContent(catIdx + 1)
         total = hists[totalIdx].GetBinContent(catIdx + 1)
         zval = AMS_2(signal, total - signal)
         hists[zvalIdx].Fill(catIdx, zval)
         hists[zvalIdx].GetXaxis().SetBinLabel(catIdx + 1, category)
-        hists[sigfracIdx].Fill(catIdx, signal / total)
+        hists[sigfracIdx].Fill(catIdx, signal / total if total != 0 else 0)
 
     return stack, hists, legend
 

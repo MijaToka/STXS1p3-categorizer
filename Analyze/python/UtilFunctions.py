@@ -22,13 +22,14 @@ def AMS_2(signal: float, background: float, regulator: float = 0) -> float:
 
 def assert_lumi(lumi: int) -> None:
     assert lumi in [
+        0,
         9,
         18,
         138,
         250,
         300,
         350,
-    ], f"Invalid lumi value: {lumi}. Must be a value in [9,18,138,250,300,350]"
+    ], f"Invalid lumi value: {lumi}. Must be a value in [0,9,18,138,250,300,350]"
 
 
 def run_plots(
@@ -104,7 +105,7 @@ def run_plots(
     for modeIdx, mode in enumerate(modes):
         for catIdx, df in enumerate(df_list):
             nEvent_map[(catIdx, modeIdx)] = df.Filter(f'{column} == "{mode}"').Sum(
-                "EventWeight_lumi{}".format(lumi)
+                "EventWeight_lumi{}".format(lumi) if lumi != 0 else ""
             )
 
     # Calculate all the values
@@ -169,7 +170,7 @@ def calculate_significance(
     nEvent_map = {}
     for mode in modes:
         nEvent_map[mode] = df.Filter(f'{column} == "{mode}"').Sum(
-            f"EventWeight_lumi{lumi}"
+            f"EventWeight_lumi{lumi}" if lumi != 0 else ""
         )
 
     ROOT.RDF.RunGraphs(list(nEvent_map.values()))
