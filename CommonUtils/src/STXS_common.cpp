@@ -123,7 +123,8 @@ void printCategory(STXS1 &s) {
 };
 
 void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
-              const std::string &file_name) {
+              const std::string &file_name,
+              const std::vector<std::string> &extraCols) {
   std::vector<std::string> columns_to_save = {
       // ZZ candidate features
       "ZZCand_pt", "ZZCand_pt_bestCand", "ZZCand_eta", "ZZCand_eta_bestCand",
@@ -170,6 +171,9 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
       "HTXS_stage1_2_cat_pTjet30GeV_merged",
       "HTXS_stage1_2_cat_pTjet30GeV_label"};
 
+  columns_to_save.insert(columns_to_save.end(), extraCols.begin(),
+                         extraCols.end());
+
   std::filesystem::create_directories(output_dir);
   std::stringstream ss;
   ss << output_dir << "/" << file_name;
@@ -181,12 +185,19 @@ void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
   std::cout << "Saved " << n_events << " events to file " << ss.str()
             << std::endl;
 }
+
+void snapshot(ROOT::RDF::RNode df, const std::string &output_dir,
+              const std::string &file_name) {
+  snapshot(df, output_dir, file_name, std::vector<std::string>{});
+}
+
 void snapshot(ROOT::RDF::RNode df, const std::string &output_dir) {
   snapshot(df, output_dir, "snapshot.root");
 };
 
 void snapshot(const std::map<STXS0, ROOT::RDF::RNode> &df_map,
-              const std::string &output_dir) {
+              const std::string &output_dir,
+              const std::vector<std::string> &extraCols) {
   std::map<STXS0, std::string> STXS0_names = {
       {STXS0::VBF_2jet, "VBF_2jet.root"},
       {STXS0::VH_hadronic, "VH_hadronic.root"},
@@ -199,12 +210,20 @@ void snapshot(const std::map<STXS0, ROOT::RDF::RNode> &df_map,
   std::stringstream ss;
   ss << output_dir << "/first_categorization";
   for (const STXS0 category : STXS0_categories) {
-    snapshot(df_map.at(category), ss.str(), STXS0_names.at(category));
+    snapshot(df_map.at(category), ss.str(), STXS0_names.at(category),
+             extraCols);
   }
+}
+
+void snapshot(const std::map<STXS0, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir) {
+  snapshot(df_map, output_dir, std::vector<std::string>{});
 };
 
 void snapshot(const std::map<STXS1, ROOT::RDF::RNode> &df_map,
-              const std::string &output_dir, std::optional<int> version) {
+              const std::string &output_dir,
+              const std::vector<std::string> &extraCols,
+              std::optional<int> version) {
   std::stringstream ss;
   ss << output_dir << "/second_categorization";
   if (version)
@@ -212,8 +231,13 @@ void snapshot(const std::map<STXS1, ROOT::RDF::RNode> &df_map,
   for (auto const &[category, df] : df_map) {
     std::stringstream name_ss;
     name_ss << generate_STXS1_category_name(category) << ".root";
-    snapshot(df, ss.str(), name_ss.str());
+    snapshot(df, ss.str(), name_ss.str(), extraCols);
   }
+}
+
+void snapshot(const std::map<STXS1, ROOT::RDF::RNode> &df_map,
+              const std::string &output_dir, std::optional<int> version) {
+  snapshot(df_map, output_dir, std::vector<std::string>{}, version);
 };
 
 ROOT::RDF::RNode applySTXS1(ROOT::RDF::RNode df, const STXS1 &category) {
